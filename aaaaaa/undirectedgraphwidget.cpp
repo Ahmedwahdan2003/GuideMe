@@ -58,7 +58,14 @@ void UndirectedGraphWidget::paintGL()
     // Draw root circle
 
     // Draw children circles and connect them with lines
+    drawCircle(0, 0, 20,"1");
 
+    // Draw children circles and connect them with lines
+    drawCircle(-100, -100, 20,"2");
+    drawLine(0, 0, -100, -100);
+
+    drawCircle(100, -100, 20,"3");
+    drawLine(0, 0, 100, -100);
 
     // addNodeAfterLast(4);
     // addNodeAfterLast(5);
@@ -187,7 +194,6 @@ void UndirectedGraphWidget::addNodeAfterLast(int number) {
     //     return;
     // }
     // Find the position of the last node
-    if(!nodes.empty())
     Node lastNode = nodes.back();
     //qDebug()<<lastNode.centerX<<" "<<lastNode.centerY<<" "<<lastNode.number<<"\n";
     // Calculate the position for the new node
