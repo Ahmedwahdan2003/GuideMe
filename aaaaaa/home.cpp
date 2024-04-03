@@ -6,6 +6,7 @@ Home::Home(QWidget *parent)
     , ui(new Ui::Home)
 {
     ui->setupUi(this);
+
     ui->verticalLayout->addWidget(graph);
 }
 
@@ -31,7 +32,8 @@ void Home::btn_1_handle2(){
 
 void Home::ADDnode(){
     QString userInput = ui->textEdit->toPlainText();
-    int number = userInput.toInt();
-    graph->addNodeAfterLast(number);
+    // int number = userInput.toInt();
+    for(int i=0;i<15;i++)
+        graph->addNodeAfterLast(i);
 
 }
