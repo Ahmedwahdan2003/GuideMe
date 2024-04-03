@@ -8,7 +8,6 @@ class UndirectedGraphWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 
-
 private:
     int viewportWidth;
     int viewportHeight;
@@ -24,7 +23,10 @@ protected:
     // void drawNode(float x, float y,int number,const float radius);
     void drawCircle(int centerX, int centerY, int radius, const QString& text);
     void drawLine(int startX, int startY, int endX, int endY);
+    // void adjustNodePositions(std::vector<Node>& nodes);
 public:void addNodeAfterLast(int number);
 };
+
+
 
 #endif // UNDIRECTEDGRAPHWIDGET_H

@@ -10,9 +10,8 @@ UndirectedGraphWidget::UndirectedGraphWidget(QWidget *parent) :
 UndirectedGraphWidget::~UndirectedGraphWidget()
 {
 }
-\
-    class Node {
-    public:
+class Node {
+public:
     int centerX;
     int centerY;
     int radius;
@@ -20,6 +19,7 @@ UndirectedGraphWidget::~UndirectedGraphWidget()
 
     Node(int x, int y, int r, int num) : centerX(x), centerY(y), radius(r), number(num) {}
 };
+
     struct Line {
         int startX;
         int startY;
@@ -28,8 +28,8 @@ UndirectedGraphWidget::~UndirectedGraphWidget()
 
         Line(int x1, int y1, int x2, int y2) : startX(x1), startY(y1), endX(x2), endY(y2) {}
     };
-    std::vector<Line> lines;
 
+std::vector<Line> lines;
 std::vector<Node> nodes;
 void UndirectedGraphWidget::initializeGL()
 {
@@ -77,32 +77,6 @@ void UndirectedGraphWidget::paintGL()
     }
 }
 
-// void UndirectedGraphWidget::drawNode(float x, float y, int number, float radius)
-// {
-//     // Draw a circle representing the node
-//     const int segments = 50;
-//     glBegin(GL_POLYGON);
-//     for (int i = 0; i < segments; ++i) {
-//         float angle = 2.0f * M_PI * i / segments;
-//         float xPos = x + radius * cos(angle);
-//         float yPos = y + radius * sin(angle);
-//         glVertex2f(xPos, yPos);
-//     }
-//     glEnd();
-
-//     // Render number inside the node using QPainter
-//     QPainter painter(this);
-//     painter.setRenderHint(QPainter::Antialiasing);
-//     painter.setPen(Qt::black);
-//     QFont font("Arial", 12);
-//     painter.setFont(font);
-
-//     // Calculate bounding rectangle for text
-//     QRectF textRect(x - radius, y - radius, 2 * radius, 2 * radius);
-
-//     // Center text within the bounding rectangle
-//     painter.drawText(textRect, Qt::AlignCenter, QString::number(number));
-// }
 
 void UndirectedGraphWidget::drawCircle(int centerX, int centerY, int radius, const QString& text) {
     glBegin(GL_LINE_LOOP);
@@ -191,9 +165,44 @@ void UndirectedGraphWidget::addNodeAfterLast(int number) {
         newY = lastNode.centerY + 100; // Adjust as needed for spacing
     }
 
+    // Check if the new node's position exceeds the viewport boundaries
+    if (newX < -viewportWidth / 2) {
+        newX = (viewportWidth / 2)-100;
+    } else if (newX > viewportWidth / 2) {
+        newX = (-viewportWidth / 2)+100;
+    }
+    if (newY < -viewportHeight / 2) {
+        newY = (viewportHeight / 2)-100;
+    } else if (newY > viewportHeight / 2) {
+        newY = (-viewportHeight / 2)+100;
+    }
+
     // Update scene state
     nodes.emplace_back(newX, newY, 20, number);
+    const float minDistance = 50.0f; // Minimum distance between nodes
+    const float pushFactor = 10.0f; // Factor to adjust positions when nodes are too close
 
+    for (size_t i = 0; i < nodes.size(); ++i) {
+        for (size_t j = i + 1; j < nodes.size(); ++j) {
+            float dx = nodes[j].centerX - nodes[i].centerX;
+            float dy = nodes[j].centerY - nodes[i].centerY;
+            float distance = std::sqrt(dx * dx + dy * dy);
+
+            if (distance < minDistance) {
+                // Nodes are too close, adjust positions
+                float adjust = (minDistance - distance) / 2.0f;
+                float angle = std::atan2(dy, dx);
+                float offsetX = std::cos(angle) * adjust * pushFactor;
+                float offsetY = std::sin(angle) * adjust * pushFactor;
+
+                // Adjust positions of both nodes
+                nodes[i].centerX -= offsetX;
+                nodes[i].centerY -= offsetY;
+                nodes[j].centerX += offsetX;
+                nodes[j].centerY += offsetY;
+            }
+        }
+    }
     // Draw a line connecting the new node to the last node
     if (nodes.size() > 1) {
         const Node& lastNode = nodes[nodes.size() - 2];
@@ -201,8 +210,6 @@ void UndirectedGraphWidget::addNodeAfterLast(int number) {
     }
 
     update(); // Trigger repaint
-
-    // Node newNode(newX, newY, 20, number);
-    // nodes.push_back(newNode);
 }
+
 
