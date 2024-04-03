@@ -20,6 +20,15 @@ UndirectedGraphWidget::~UndirectedGraphWidget()
 
     Node(int x, int y, int r, int num) : centerX(x), centerY(y), radius(r), number(num) {}
 };
+    struct Line {
+        int startX;
+        int startY;
+        int endX;
+        int endY;
+
+        Line(int x1, int y1, int x2, int y2) : startX(x1), startY(y1), endX(x2), endY(y2) {}
+    };
+    std::vector<Line> lines;
 
 std::vector<Node> nodes;
 void UndirectedGraphWidget::initializeGL()
@@ -55,22 +64,13 @@ void UndirectedGraphWidget::paintGL()
 
     glColor3f(0.0f, 0.0f, 0.0f); // Set color to black
 
-    // Draw root circle
+    for (const auto& node : nodes) {
+        drawCircle(node.centerX, node.centerY, node.radius, QString::number(node.number));
+    }
 
-    // Draw children circles and connect them with lines
-    drawCircle(0, 0, 20,"1");
-
-    // Draw children circles and connect them with lines
-    drawCircle(-100, -100, 20,"2");
-    drawLine(0, 0, -100, -100);
-
-    drawCircle(100, -100, 20,"3");
-    drawLine(0, 0, 100, -100);
-
-    // addNodeAfterLast(4);
-    // addNodeAfterLast(5);
-    // addNodeAfterLast(6);
-    // Check for OpenGL errors
+    for (const auto& line : lines) {
+        drawLine(line.startX, line.startY, line.endX, line.endY);
+    }
     GLenum error = glGetError();
     if (error != GL_NO_ERROR) {
         qDebug() << "OpenGL error:" << error;
@@ -148,10 +148,6 @@ void UndirectedGraphWidget::drawCircle(int centerX, int centerY, int radius, con
 
     // Draw text
     painter.drawText(textX, textY+15, text);
-    int n = text.toInt();
-    Node nn(centerX, centerY, radius, n);
-    nodes.push_back(nn);
-    // qDebug() << nn.number << "\n";
     // update();
 }
 
@@ -174,45 +170,37 @@ void UndirectedGraphWidget::drawLine(int startX, int startY, int endX, int endY)
     int textHeight = textRect.height();
 
     // Convert OpenGL coordinates to widget coordinates for midpoint
-    int widgetMidX = (startX + endX + viewportWidth) / 2;
-    int widgetMidY = (startY + endY + viewportHeight) / 2;
+    int widgetMidX = (startX + endX + width()) / 2;
+    int widgetMidY = (startY + endY + height()) / 2;
 
     // Adjust text position to center it within the line
     int textX = widgetMidX - textWidth / 2;
-    int textY = viewportHeight - (widgetMidY + textHeight / 2); // Adjust Y-coordinate for QPainter's coordinate system
+    int textY = height() - (widgetMidY + textHeight / 2); // Adjust Y-coordinate for QPainter's coordinate system
 
     // Draw text
-    painter.drawText(textX, textY+10, weightText);
+    painter.drawText(textX, textY, weightText);
 
 }
 
 
 void UndirectedGraphWidget::addNodeAfterLast(int number) {
-    // Check if there are any existing nodes
-    // if (nodes.empty()) {
-    //     qDebug() << "No existing nodes to connect to!";
-    //     return;
-    // }
-    // Find the position of the last node
-    Node lastNode = nodes.back();
-    //qDebug()<<lastNode.centerX<<" "<<lastNode.centerY<<" "<<lastNode.number<<"\n";
-    // Calculate the position for the new node
-    int newX = lastNode.centerX + 100; // Adjust as needed for spacing
-    int newY = lastNode.centerY + 100; // Adjust as needed for spacing
-    if(nodes.empty())
-    {
-        newX=0;
-        newY=0;
+    int newX = 0, newY = 0;
+    if (!nodes.empty()) {
+        const Node& lastNode = nodes.back();
+        newX = lastNode.centerX + 100; // Adjust as needed for spacing
+        newY = lastNode.centerY + 100; // Adjust as needed for spacing
     }
-    // Draw the new node
-    glColor3f(0.0f, 0.0f, 0.0f);
-    drawCircle(newX+5, newY, 20, QString::number(number));
+
+    // Update scene state
+    nodes.emplace_back(newX, newY, 20, number);
 
     // Draw a line connecting the new node to the last node
-    glColor3f(0.0f, 0.0f, 0.0f);
-    if(!nodes.empty()){
-    drawLine(lastNode.centerX, lastNode.centerY, newX, newY);
+    if (nodes.size() > 1) {
+        const Node& lastNode = nodes[nodes.size() - 2];
+        lines.emplace_back(lastNode.centerX, lastNode.centerY, newX, newY);
     }
+
+    update(); // Trigger repaint
 
     // Node newNode(newX, newY, 20, number);
     // nodes.push_back(newNode);
