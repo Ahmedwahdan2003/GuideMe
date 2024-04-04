@@ -20,6 +20,7 @@ Home::~Home()
 void Home::btn_1_handle(){
 
     qDebug()<<"first function";
+    // ui->textEdit->insertPlainText("hello there");
     ui->textEdit->setText("logged in successfully");
 }
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1102</width>
+    <height>699</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -62,7 +62,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1102</width>
      <height>21</height>
     </rect>
    </property>
@@ -78,8 +78,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
    <slot>btn_1_handle()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>233</x>
-     <y>101</y>
+     <x>242</x>
+     <y>149</y>
     </hint>
     <hint type="destinationlabel">
      <x>474</x>
@@ -94,8 +94,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
    <slot>ADDnode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>67</x>
-     <y>487</y>
+     <x>76</x>
+     <y>569</y>
     </hint>
     <hint type="destinationlabel">
      <x>237</x>
