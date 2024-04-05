@@ -3,4 +3,4 @@
 open cmd in desktop.
 run the following command
 
-git clone
+git clone https://github.com/Ahmedwahdan2003/GuideMe.git
