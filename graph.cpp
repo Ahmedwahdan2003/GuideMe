@@ -42,20 +42,20 @@ bool Graph::readGraphFile(const QString& fileName)
             continue;
         }
 
-        std::string node1Name = parts[0].toStdString();
-        std::string node2Name = parts[1].toStdString();
+        std::string source = parts[0].toStdString();
+        std::string destination = parts[1].toStdString();
                                                             //alex cairo bus 20 metro 30
-        Node node1(node1Name);
-        Node node2(node2Name);
+        Node src(source);
+        Node dist(destination);
 
         std::vector<Transportation> weights;
-        for (int i = 2; i < parts.size(); ++i) {
+        for (int i = 2; i < parts.size()-1; ++i) {
             std::string name = parts[i].toStdString();
             int cost = parts[i+1].toInt();
             weights.emplace_back(Transportation(name,cost));
         }
 
-        addEdge(node1, node2, weights);
+        addEdge(source, destination, weights);
     }
 
     file.close();

@@ -1,0 +1,6 @@
+Alex Cairo Bus 50 Metro 60 taxi 30
+Cairo Giza Bus 50 Metro 60 taxi 30
+Cairo ismaelya Bus 50 Metro 60 taxi 30
+Giza matroh Bus 50 Metro 60 taxi 30
+Cairo matroh Bus 50 Metro 60 taxi 30
+Alex Giza Bus 50 Metro 60 taxi 30

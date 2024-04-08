@@ -1,6 +1,6 @@
 #include "home.h"
-// #include"graph.h"
 #include <QApplication>
+
 
 int main(int argc, char *argv[])
 {
