@@ -22,8 +22,8 @@ HEADERS += \
 FORMS += \
     home.ui
 
-INCLUDEPATH += "C:/Program Files/Graphviz/include"
-LIBS += -lopengl32 -L"C:/Program Files/Graphviz/lib" -lgvc -lcgraph
+
+LIBS += -lopengl32
 
 
 # Default rules for deployment.
