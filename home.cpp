@@ -8,8 +8,6 @@ Home::Home(QWidget *parent)
 
     ui->verticalLayout->addWidget(graph);
 }
-
-
 Home::~Home()
 {
     delete ui;
