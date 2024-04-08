@@ -2,7 +2,6 @@
 #define HOME_H
 #include"opengl_graph.h"
 #include <QMainWindow>
-
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class Home;

@@ -6,6 +6,7 @@ Home::Home(QWidget *parent)
 {
     ui->setupUi(this);
 
+
     ui->verticalLayout->addWidget(graph);
 }
 
