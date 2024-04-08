@@ -1,6 +1,5 @@
 #ifndef HOME_H
 #define HOME_H
-#include"opengl_graph.h"
 #include <QMainWindow>
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -18,7 +17,7 @@ public:
 
 private:
     Ui::Home *ui;
-    opengl_graph* graph = new opengl_graph(this);
+
 
 public slots:
     void btn_1_handle();

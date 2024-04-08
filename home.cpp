@@ -1,16 +1,15 @@
 #include "home.h"
 #include "ui_home.h"
+#include"graph.h"
 Home::Home(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::Home)
 {
     ui->setupUi(this);
+    Graph g;
 
 
-    ui->verticalLayout->addWidget(graph);
 }
-
-
 Home::~Home()
 {
     delete ui;
@@ -32,9 +31,6 @@ void Home::btn_1_handle2(){
 }
 
 void Home::ADDnode(){
-    QString userInput = ui->textEdit->toPlainText();
+    // QString userInput = ui->textEdit->toPlainText();
     // int number = userInput.toInt();
-    for(int i=0;i<15;i++)
-        graph->addNodeAfterLast(i);
-
 }
