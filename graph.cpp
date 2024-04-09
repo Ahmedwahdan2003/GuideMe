@@ -49,7 +49,7 @@ bool Graph::readGraphFile(const QString& fileName)
         Node dist(destination);
 
         std::vector<Transportation> weights;
-        for (int i = 2; i < parts.size()-1; ++i) {
+        for (int i = 2; i < parts.size(); i+=2) {
             std::string name = parts[i].toStdString();
             int cost = parts[i+1].toInt();
             weights.emplace_back(Transportation(name,cost));
