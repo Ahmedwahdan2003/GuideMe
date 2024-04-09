@@ -6,9 +6,9 @@ Home::Home(QWidget *parent)
     , ui(new Ui::Home)
 {
     ui->setupUi(this);
-    Graph g;
-    g.readGraphFile("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\Graph.txt");
-    g.printGraph();
+    Graph graph;
+    graph.readGraphFile("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\Graph.txt");
+    graph.printGraph();
 
 }
 Home::~Home()
