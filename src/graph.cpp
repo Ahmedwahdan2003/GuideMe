@@ -87,11 +87,11 @@ bool Graph::readGraphFile(const QString& fileName)
 }
 void Graph::printGraph() {
     for (const auto& pair : adjcencyList) {
-        qDebug() << "Node " << pair.first.nodeName.c_str() << " connected to: ";
+        qDebug() << "Node " << pair.first.getNodeName().c_str() << " connected to: ";
         for (const auto& edge : pair.second) {
-            qDebug() << edge.destination.nodeName.c_str() << " Weights: ";
-            for (const Transportation& weight : edge.options) {
-                qDebug() << weight.name.c_str() << weight.cost;
+            qDebug() << edge.getDestination().getNodeName().c_str() << " Weights: ";
+            for (const Transportation& weight : edge.getOptions()) {
+                qDebug() << weight.getName().c_str() << weight.getCost();
             }
             qDebug() << "| ";
         }

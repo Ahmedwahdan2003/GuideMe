@@ -46,6 +46,9 @@ struct Node {
     void setNodeName(const std::string& newName) {
         nodeName = newName;
     }
+    bool operator<(const Node& other) const {
+        return nodeName < other.nodeName;
+    }
 };
 
 struct Edge {
