@@ -27,6 +27,17 @@ std::vector<Edge> Graph::getEdges(Node Source)
 
 }
 
+std::vector<Node> Graph::getNodes()
+{
+    std::vector<Node>result;
+    for (const auto& Key : adjcencyList) {
+        result.push_back(Key.first);
+    }
+    return result;
+}
+
+
+
 void Graph::addEdge(Node From,Node dest,std::vector<Transportation>opts){
     addNode(From);
     addNode(dest);

@@ -12,10 +12,8 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -25,54 +23,41 @@ class Ui_Home
 {
 public:
     QWidget *centralwidget;
+    QPushButton *pushButton;
+    QWidget *widget;
     QVBoxLayout *verticalLayout;
-    QPushButton *btn_1;
-    QTextEdit *textEdit;
-    QPushButton *btn_2;
-    QMenuBar *menubar;
+    QPushButton *pushButton_2;
+    QPushButton *pushButton_3;
     QStatusBar *statusbar;
 
     void setupUi(QMainWindow *Home)
     {
         if (Home->objectName().isEmpty())
             Home->setObjectName("Home");
-        Home->resize(800, 600);
+        Home->resize(1122, 694);
         centralwidget = new QWidget(Home);
         centralwidget->setObjectName("centralwidget");
-        verticalLayout = new QVBoxLayout(centralwidget);
+        pushButton = new QPushButton(centralwidget);
+        pushButton->setObjectName("pushButton");
+        pushButton->setGeometry(QRect(930, 600, 181, 71));
+        widget = new QWidget(centralwidget);
+        widget->setObjectName("widget");
+        widget->setGeometry(QRect(-1, -1, 881, 731));
+        verticalLayout = new QVBoxLayout(widget);
         verticalLayout->setObjectName("verticalLayout");
-        btn_1 = new QPushButton(centralwidget);
-        btn_1->setObjectName("btn_1");
-
-        verticalLayout->addWidget(btn_1);
-
-        textEdit = new QTextEdit(centralwidget);
-        textEdit->setObjectName("textEdit");
-        QSizePolicy sizePolicy(QSizePolicy::Policy::Maximum, QSizePolicy::Policy::Maximum);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(textEdit->sizePolicy().hasHeightForWidth());
-        textEdit->setSizePolicy(sizePolicy);
-
-        verticalLayout->addWidget(textEdit);
-
-        btn_2 = new QPushButton(centralwidget);
-        btn_2->setObjectName("btn_2");
-
-        verticalLayout->addWidget(btn_2);
-
+        pushButton_2 = new QPushButton(centralwidget);
+        pushButton_2->setObjectName("pushButton_2");
+        pushButton_2->setGeometry(QRect(930, 500, 181, 71));
+        pushButton_3 = new QPushButton(centralwidget);
+        pushButton_3->setObjectName("pushButton_3");
+        pushButton_3->setGeometry(QRect(930, 400, 181, 71));
         Home->setCentralWidget(centralwidget);
-        menubar = new QMenuBar(Home);
-        menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 800, 21));
-        Home->setMenuBar(menubar);
         statusbar = new QStatusBar(Home);
         statusbar->setObjectName("statusbar");
         Home->setStatusBar(statusbar);
 
         retranslateUi(Home);
-        QObject::connect(btn_1, SIGNAL(clicked()), Home, SLOT(btn_1_handle()));
-        QObject::connect(btn_2, SIGNAL(clicked()), Home, SLOT(ADDnode()));
+        QObject::connect(pushButton_3, SIGNAL(clicked()), Home, SLOT(btn_1_handle()));
 
         QMetaObject::connectSlotsByName(Home);
     } // setupUi
@@ -80,8 +65,9 @@ public:
     void retranslateUi(QMainWindow *Home)
     {
         Home->setWindowTitle(QCoreApplication::translate("Home", "Home", nullptr));
-        btn_1->setText(QCoreApplication::translate("Home", "PushButton", nullptr));
-        btn_2->setText(QCoreApplication::translate("Home", "PushButton", nullptr));
+        pushButton->setText(QCoreApplication::translate("Home", "Update", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("Home", "Delete", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("Home", "Add", nullptr));
     } // retranslateUi
 
 };
