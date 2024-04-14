@@ -5,10 +5,9 @@
 #include <vector>
 #include<QString>
 struct Transportation {
-private:
     std::string name;
     int cost;
-public:
+
     Transportation(std::string s, int n) : name(std::move(s)), cost(n) {}
 
     // Getter for name
@@ -33,10 +32,11 @@ public:
 };
 
 struct Node {
-    private:std::string nodeName;
-    public:
+    std::string nodeName;
     Node(std::string Name) : nodeName(std::move(Name)) {}
-
+    bool operator<(const Node& other) const {
+        return nodeName < other.nodeName;
+    }
     // Getter for nodeName
     std::string getNodeName() const {
         return nodeName;
@@ -46,17 +46,13 @@ struct Node {
     void setNodeName(const std::string& newName) {
         nodeName = newName;
     }
-    bool operator<(const Node& other) const {
-        return nodeName < other.nodeName;
-    }
 };
 
 struct Edge {
-private:
     Node parent;
     Node destination;
     std::vector<Transportation> options;
-public:
+
     Edge(Node prnt, Node dest, std::vector<Transportation> opts)
         : parent(std::move(prnt)), destination(std::move(dest)), options(std::move(opts)) {}
 
@@ -91,6 +87,7 @@ public:
     }
 };
 
+
 class Graph
 {
 
@@ -98,9 +95,9 @@ private: std::map<Node,std::vector<Edge>>adjcencyList;
 public:
     Graph();
 
- bool readGraphFile(const QString&fileName);
+ bool readGraphFile( const QString&fileName);
  void printGraph();
- void addNode(const Node newNode);
+ void addNode( Node newNode);
  std::vector<Edge>getEdges(Node Source);
  std::vector<Node>getNodes();
 
@@ -109,8 +106,8 @@ public:
  void deleteEdge(Edge Target);                                          //{WAHDAN}==> A GRAPH IS COMPLETE IF EVERY NODE HAS EDGES TO EVERY OTHER NODE IN THE GRAPH
  bool isCompleteGraph();                                                //{WAHDAN}==> SEARCH ON HOW TO DO IT USING AN ALGORITHM
 
- void DFS(Node StartNode);
- void BFS(Node StartNode);
+ std::vector<Node> DFS(Node& StartNode);
+ std::vector<Node> BFS(Node& StartNode);
 
 };
 #endif // GRAPH_H

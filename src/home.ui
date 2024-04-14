@@ -14,53 +14,57 @@
    <string>Home</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QGraphicsView" name="graphicsView">
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>31</y>
-      <width>821</width>
-      <height>571</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>861</x>
-      <y>35</y>
-      <width>251</width>
-      <height>561</height>
+      <x>5</x>
+      <y>1</y>
+      <width>1111</width>
+      <height>641</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="pushButton_4">
-       <property name="text">
-        <string>DFS</string>
-       </property>
-      </widget>
+      <widget class="QGraphicsView" name="graphicsView"/>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3">
-       <property name="text">
-        <string>Add</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_2">
-       <property name="text">
-        <string>Delete</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton">
-       <property name="text">
-        <string>Update</string>
-       </property>
-      </widget>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QPushButton" name="BFS_btn">
+         <property name="text">
+          <string>BFS</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="DFS_btn">
+         <property name="text">
+          <string>DFS</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="Add_btn">
+         <property name="text">
+          <string>Add</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="Del_btn">
+         <property name="text">
+          <string>Delete</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="Update_btn">
+         <property name="text">
+          <string>Update</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>
@@ -70,7 +74,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>pushButton_3</sender>
+   <sender>Add_btn</sender>
    <signal>clicked()</signal>
    <receiver>Home</receiver>
    <slot>btn_1_handle()</slot>

@@ -3,6 +3,8 @@
 #include <QFile>
 #include <QTextStream>
 #include <QStringList>
+#include<stack>
+#include <unordered_set>
 Graph::Graph():adjcencyList() {
 
 }
@@ -86,7 +88,7 @@ bool Graph::readGraphFile(const QString& fileName)
     return true;
 }
 void Graph::printGraph() {
-    for (const auto& pair : adjcencyList) {
+    for ( auto& pair : adjcencyList) {
         qDebug() << "Node " << pair.first.getNodeName().c_str() << " connected to: ";
         for (const auto& edge : pair.second) {
             qDebug() << edge.getDestination().getNodeName().c_str() << " Weights: ";
@@ -99,5 +101,40 @@ void Graph::printGraph() {
     }
 }
 
+std::vector<Node> Graph::DFS(Node& StartNode) {
+    std::stack<Node> st;
+    std::vector<Node> path;
+    std::unordered_set<std::string> visitedNodes;
+    st.push(StartNode);
 
+    while (!st.empty()) {
+        Node node = st.top();
+        st.pop();
+
+            //{WAHDAN}==> Check if the node has already been visited
+        if (visitedNodes.find(node.getNodeName()) != visitedNodes.end()) {
+            continue; // Skip this node
+        }
+
+        //{WAHDAN}==> Mark the node as visited
+        visitedNodes.insert(node.getNodeName());
+
+        //{WAHDAN}==> Add the node to the path
+        path.push_back(node);
+
+        //{WAHDAN}==> Get the edges connected to the current node
+        std::vector<Edge> edges = getEdges(node);
+
+
+        for (const Edge& edge : edges) {
+            Node destNode = edge.getDestination();
+
+            if (visitedNodes.find(destNode.getNodeName()) == visitedNodes.end()) {      //{WAHDAN}==>check if one the neighbors is already visited before or no
+                st.push(destNode);
+            }
+        }
+    }
+
+    return path;
+}
 

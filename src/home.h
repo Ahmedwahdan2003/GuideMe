@@ -12,7 +12,8 @@ class Home : public QMainWindow
     Q_OBJECT
 
 public:
-    Home(QWidget *parent = nullptr);
+
+  Home(QWidget *parent = nullptr);
     ~Home();
 
 private:
