@@ -4,6 +4,7 @@
 #include <QTextStream>
 #include <QStringList>
 #include<stack>
+#include<queue>
 #include <unordered_set>
 Graph::Graph():adjcencyList() {
 
@@ -137,4 +138,48 @@ std::vector<Node> Graph::DFS(Node& StartNode) {
 
     return path;
 }
+std::vector<Node> Graph::BFS(Node& StartNode)
+{
+    std::queue<Node> q;
+    std::unordered_set<std::string> visitedNodes;
+    std::vector<Node> path;
+    q.push(StartNode);
 
+
+    while(!q.empty())
+    {
+        Node node = q.front();
+        q.pop();
+
+
+            // {Omar Khales} -> check if node is already visited
+
+
+        if (visitedNodes.find(node.getNodeName()) != visitedNodes.end()) {
+            continue; // Skip this node
+        }
+
+
+        // {Omar Khales} -> mark node as visited
+        visitedNodes.insert(node.getNodeName());
+
+        // {Omar Khales} -> adding node to the path
+        path.push_back(node);
+
+
+        // {Omar Khales} -> getting neighbours of node using its edges
+
+        std::vector<Edge>edges = getEdges(node);
+
+        // {Omar Khales} -> iterating over edges of the node
+
+        for(const Edge& edge :edges){
+            Node destNode = edge.getDestination();
+
+            if(visitedNodes.find(destNode.getNodeName())==visitedNodes.end())
+                q.push(destNode); // {Omar Khales} -> adding unvisited neighbours
+        }
+    }
+
+    return path;
+}
