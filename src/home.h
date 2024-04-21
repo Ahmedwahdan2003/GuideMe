@@ -13,6 +13,7 @@ class Home : public QMainWindow
 
 public:
 
+
   Home(QWidget *parent = nullptr);
     ~Home();
 
@@ -24,6 +25,7 @@ public slots:
     void btn_1_handle();
     void btn_1_handle2();
     void ADDnode();
+     // void layoutGraph();
 
 
 };

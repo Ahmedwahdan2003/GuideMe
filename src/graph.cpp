@@ -6,10 +6,17 @@
 #include<stack>
 #include<queue>
 #include <unordered_set>
-Graph::Graph():adjcencyList() {
+Graph::Graph(){
 
 }
-
+Node Graph::back(){
+    auto lastElement = adjcencyList.rbegin();
+    Node lastNode = lastElement->first;
+    return lastNode;
+}
+bool Graph::empty(){
+    return adjcencyList.empty();
+}
 void Graph::addNode(const Node newNode)
 {
     if(adjcencyList.find(newNode)==adjcencyList.end()){
@@ -69,15 +76,15 @@ bool Graph::readGraphFile(const QString& fileName)
             continue;
         }
 
-        std::string source = parts[0].toStdString();
-        std::string destination = parts[1].toStdString();
+        QString source = parts[0];
+        QString destination = parts[1];
                                                             //alex cairo bus 20 metro 30
         Node src(source);
         Node dist(destination);
 
         std::vector<Transportation> weights;
         for (int i = 2; i < parts.size(); i+=2) {
-            std::string name = parts[i].toStdString();
+            QString name = parts[i];
             int cost = parts[i+1].toInt();
             weights.emplace_back(Transportation(name,cost));
         }
@@ -90,11 +97,11 @@ bool Graph::readGraphFile(const QString& fileName)
 }
 void Graph::printGraph() {
     for ( auto& pair : adjcencyList) {
-        qDebug() << "Node " << pair.first.getNodeName().c_str() << " connected to: ";
+        qDebug() << "Node " << pair.first.getNodeName() << " connected to: ";
         for (const auto& edge : pair.second) {
-            qDebug() << edge.getDestination().getNodeName().c_str() << " Weights: ";
+            qDebug() << edge.getDestination().getNodeName() << " Weights: ";
             for (const Transportation& weight : edge.getOptions()) {
-                qDebug() << weight.getName().c_str() << weight.getCost();
+                qDebug() << weight.getName() << weight.getCost();
             }
             qDebug() << "| ";
         }
@@ -105,7 +112,7 @@ void Graph::printGraph() {
 std::vector<Node> Graph::DFS(Node& StartNode) {
     std::stack<Node> st;
     std::vector<Node> path;
-    std::unordered_set<std::string> visitedNodes;
+    std::unordered_set<QString> visitedNodes;
     st.push(StartNode);
 
     while (!st.empty()) {
@@ -141,7 +148,7 @@ std::vector<Node> Graph::DFS(Node& StartNode) {
 std::vector<Node> Graph::BFS(Node& StartNode)
 {
     std::queue<Node> q;
-    std::unordered_set<std::string> visitedNodes;
+    std::unordered_set<QString> visitedNodes;
     std::vector<Node> path;
     q.push(StartNode);
 
@@ -182,4 +189,19 @@ std::vector<Node> Graph::BFS(Node& StartNode)
     }
 
     return path;
+}
+std::vector<Edge> Graph::getEdges(){
+
+    std::vector<Edge> allEdges;
+
+    // Iterate through each node in the adjacency list
+    for (const auto& adjacencyPair : adjcencyList) {
+        // Retrieve the vector of edges associated with the current node
+        const std::vector<Edge>& edges = adjacencyPair.second;
+
+        // Append the edges to the 'allEdges' vector
+        allEdges.insert(allEdges.end(), edges.begin(), edges.end());
+    }
+
+    return allEdges;
 }
