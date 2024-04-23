@@ -48,16 +48,14 @@ std::vector<Node> Graph::getNodes()
 
 
 
-void Graph::addEdge(Node From,Node dest,std::vector<Transportation>opts){
+void Graph::addEdge(Node From,Node dest,Transportation opt){
     addNode(From);
     addNode(dest);
-    Edge newEdge = Edge(From,dest,opts);
-    Edge newEdge2 = Edge(dest,From,opts);
+    Edge newEdge = Edge(From,dest,opt);
+    Edge newEdge2 = Edge(dest,From,opt);
     adjcencyList[From].emplace_back(newEdge);
     adjcencyList[dest].emplace_back(newEdge2);
 }
-
-
 bool Graph::readGraphFile(const QString& fileName)
 {
     QFile file(fileName);
@@ -71,43 +69,79 @@ bool Graph::readGraphFile(const QString& fileName)
         QString line = in.readLine().trimmed();
         QStringList parts = line.split(' ');
 
-        if (parts.size() < 2) {
+        if (parts.size() < 3) {
             qDebug() << "Invalid line: " << line.toStdString() << "\n";
             continue;
         }
 
         QString source = parts[0];
         QString destination = parts[1];
-                                                            //alex cairo bus 20 metro 30
+
         Node src(source);
         Node dist(destination);
 
-        std::vector<Transportation> weights;
-        for (int i = 2; i < parts.size(); i+=2) {
-            QString name = parts[i];
-            int cost = parts[i+1].toInt();
-            weights.emplace_back(Transportation(name,cost));
-        }
+        // Create a single Transportation object for the edge
+        QString transportationName = parts[2];
+        int transportationCost = parts[3].toInt();
+        Transportation transportation(transportationName, transportationCost);
 
-        addEdge(source, destination, weights);
+        // Add the edge to the graph
+        addEdge(src, dist, transportation);
     }
 
     file.close();
     return true;
 }
+
+
+// bool Graph::readGraphFile(const QString& fileName)
+// {
+//     QFile file(fileName);
+//     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+//         qDebug() << "Failed to open file: " << fileName.toStdString() << "\n";
+//         return false;
+//     }
+
+//     QTextStream in(&file);
+//     while (!in.atEnd()) {
+//         QString line = in.readLine().trimmed();
+//         QStringList parts = line.split(' ');
+
+//         if (parts.size() < 2) {
+//             qDebug() << "Invalid line: " << line.toStdString() << "\n";
+//             continue;
+//         }
+
+//         QString source = parts[0];
+//         QString destination = parts[1];
+//                                                             //alex cairo bus 20 metro 30
+//         Node src(source);
+//         Node dist(destination);
+
+//         std::vector<Transportation> weights;
+//         for (int i = 2; i < parts.size(); i+=2) {
+//             QString name = parts[i];
+//             int cost = parts[i+1].toInt();
+//             weights.emplace_back(Transportation(name,cost));
+//         }
+
+//         addEdge(source, destination, weights);
+//     }
+
+//     file.close();
+//     return true;
+// }
 void Graph::printGraph() {
-    for ( auto& pair : adjcencyList) {
+    for (const auto& pair : adjcencyList) {
         qDebug() << "Node " << pair.first.getNodeName() << " connected to: ";
         for (const auto& edge : pair.second) {
-            qDebug() << edge.getDestination().getNodeName() << " Weights: ";
-            for (const Transportation& weight : edge.getOptions()) {
-                qDebug() << weight.getName() << weight.getCost();
-            }
-            qDebug() << "| ";
+            qDebug() << edge.getDestination().getNodeName() << " Weight: "
+                     << edge.getOption().getName() << " " << edge.getOption().getCost();
         }
         qDebug() << "\n";
     }
 }
+
 
 std::vector<Node> Graph::DFS(Node& StartNode) {
     std::stack<Node> st;

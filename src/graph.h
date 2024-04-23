@@ -65,13 +65,13 @@ struct Node {
 struct Edge {
     Node parent;
     Node destination;
-    std::vector<Transportation> options;
+    Transportation option;
     float startX;
     float startY;
     float endX;
     float endY;
-    Edge(Node prnt, Node dest, std::vector<Transportation> opts)
-        : parent(std::move(prnt)), destination(std::move(dest)), options(std::move(opts)) {
+    Edge(Node prnt, Node dest, Transportation opt)
+        : parent(std::move(prnt)), destination(std::move(dest)), option(std::move(opt)) {
     startX=1;
     startY=1;
     endX=1;
@@ -99,13 +99,13 @@ struct Edge {
     }
 
     // Getter for options
-    std::vector<Transportation> getOptions() const {
-        return options;
+    Transportation getOption() const {
+        return option;
     }
 
     // Setter for options
-    void setOptions(const std::vector<Transportation>& newOptions) {
-        options = newOptions;
+    void setOptions(const Transportation& newOption) {
+        option = newOption;
     }
 };
 
@@ -123,7 +123,7 @@ Node back();
  std::vector<Edge>getEdges(Node Source);
  std::vector<Node>getNodes();
  bool empty();
- void addEdge(Node From,Node dest,std::vector<Transportation>opts);
+ void addEdge(Node From,Node dest,Transportation opt);
  void updateEdge(Edge Target);                                          //{WAHDAN}==> THESE FUNCTIONS WILL BE IMPLEMENTED BY [RAHAF-RAWAN,BASMALA1]
  void deleteEdge(Edge Target);                                          //{WAHDAN}==> A GRAPH IS COMPLETE IF EVERY NODE HAS EDGES TO EVERY OTHER NODE IN THE GRAPH
  bool isCompleteGraph();                                                //{WAHDAN}==> SEARCH ON HOW TO DO IT USING AN ALGORITHM
