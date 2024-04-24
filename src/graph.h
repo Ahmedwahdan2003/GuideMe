@@ -37,9 +37,9 @@ struct Node {
     float centerY;
     int radius;
 
-    Node(QString Name) : nodeName(std::move(Name)) {
-        centerX=1;
-        centerY=1;
+    Node(QString Name,float x,float y) : nodeName(std::move(Name)),centerX(x),centerY(y) {
+        centerX=x;
+        centerY=y;
         radius=20;
     }
     Node(QString name,int cenX,int cenY,int rad):nodeName(name),centerX(cenX),centerY(cenY),radius(rad){

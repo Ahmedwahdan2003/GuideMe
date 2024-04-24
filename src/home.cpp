@@ -1,6 +1,6 @@
 #include "home.h"
 #include "ui_home.h"
-#include"graph_view.h"
+#include "visualizegraph.h"
 Home::Home(QWidget *parent) : QMainWindow(parent), ui(new Ui::Home)
 {
     ui->setupUi(this);
@@ -22,14 +22,15 @@ Home::Home(QWidget *parent) : QMainWindow(parent), ui(new Ui::Home)
 
     // Print graph data for debugging
     graph->printGraph();
-
-    graph_view* view = new graph_view(this,graph);
+    visualizeGraph* graphWidget = new visualizeGraph();
+    graphWidget->setGraph(graph);
+    ui->verticalLayout_2->addWidget(graphWidget);
     // Layout the graph
     // std::vector<Node>nodes = graph->getNodes();
     // for(size_t i=0;i<nodes.size();++i){
     //     qDebug()<<nodes[i].nodeName<<" "<<nodes[i].centerX<<" "<<nodes[i].centerY<<"\n";
     // }
-    ui->verticalLayout_2->addWidget(view);
+
 
 
     // Create the graph_view widget and pass the Graph object

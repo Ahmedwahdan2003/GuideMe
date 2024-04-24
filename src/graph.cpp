@@ -76,17 +76,19 @@ bool Graph::readGraphFile(const QString& fileName)
 
         QString source = parts[0];
         QString destination = parts[1];
+        float x1 = parts[2].toFloat();
+        float y1 = parts[3].toFloat();
+        float x2 = parts[4].toFloat();
+        float y2 = parts[5].toFloat();
+        Node src(source,x1,y1);
+        Node dist(destination,x2,y2);
 
-        Node src(source);
-        Node dist(destination);
-
-        // Create a single Transportation object for the edge
-        QString transportationName = parts[2];
-        int transportationCost = parts[3].toInt();
+        for(int i=6;i<parts.size()-1;i+=2){
+        QString transportationName = parts[i];
+        int transportationCost = parts[i+1].toInt();
         Transportation transportation(transportationName, transportationCost);
-
-        // Add the edge to the graph
         addEdge(src, dist, transportation);
+        }
     }
 
     file.close();
