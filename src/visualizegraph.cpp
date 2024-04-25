@@ -1,49 +1,51 @@
+// visualizegraph.cpp
 #include "visualizegraph.h"
-#include <QPainter>
+#include <QGraphicsEllipseItem>
+#include <QGraphicsLineItem>
 
-visualizeGraph::visualizeGraph(QGraphicsItem *parent) : QGraphicsWidget(parent)
+visualizeGraph::visualizeGraph(QWidget *parent) : QGraphicsView(parent), graph(nullptr)
 {
-    // Initialize any member variables if needed
+    // Set the scene
+    setScene(new QGraphicsScene(this));
 }
 
-
-void visualizeGraph::setGraph(Graph *mygraph)
+void visualizeGraph::setGraph(Graph* graph)
 {
-    graph = mygraph;
-    update(); // Trigger repaint
-}
+    this->graph = graph;
+    if (!graph)
+        return;
 
-void visualizeGraph::visualizeDFS(std::vector<Node> &path)
-{
-    // Implement DFS visualization
-    // Update rendering to highlight nodes and edges based on the traversal path
-    update(); // Trigger repaint
-}
+    // Clear the scene
+    scene()->clear();
 
-void visualizeGraph::visualizeBFS( std::vector<Node> &path)
-{
-    // Implement BFS visualization
-    // Update rendering to highlight nodes and edges based on the traversal path
-    update(); // Trigger repaint
-}
+    // Get nodes and edges from the graph
+    std::vector<Node> nodes = graph->getNodes();
+    std::vector<Edge> edges = graph->getEdges();
 
-void visualizeGraph::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    // Implement rendering logic to draw nodes, edges, and traversal animations
-    // Use QPainter to draw shapes and lines based on the graph data
-
-    // Example: Draw a simple circle for each node
-    painter->setPen(Qt::black);
-    painter->setBrush(Qt::blue);
-    for (const Node &node : graph->getNodes()) {
-        painter->drawEllipse(node.centerX - node.radius, node.centerY - node.radius, 2 * node.radius, 2 * node.radius);
+    // Draw nodes
+    for (const auto& node : nodes) {
+        QGraphicsEllipseItem* nodeItem = scene()->addEllipse(
+            node.centerX - node.radius, node.centerY - node.radius,
+            2 * node.radius, 2 * node.radius
+            );
+        nodeItem->setBrush(Qt::red);
+        // Set node name as tooltip
+        // nodeItem->setPlainText(node.nodeName);
     }
 
-    // Example: Draw lines for each edge
-    painter->setPen(Qt::black);
-    for (const Node &node : graph->getNodes()) {
-        for (const Edge &edge : graph->getEdges(node)) {
-            painter->drawLine(edge.startX, edge.startY, edge.endX, edge.endY);
-        }
+   // Draw edges
+    for (const auto& edge : edges) {
+        // Get coordinates of start and end nodes
+        float startX = edge.parent.centerX;
+        float startY = edge.parent.centerY;
+        float endX = edge.destination.centerX;
+        float endY = edge.destination.centerY;
+
+        // Draw edge line
+        QGraphicsLineItem* edgeItem = scene()->addLine(
+            startX, startY, endX, endY
+            );
+        // Set edge options as tooltip
+        edgeItem->setToolTip(edge.option.getName() + ": " + QString::number(edge.option.getCost()));
     }
 }

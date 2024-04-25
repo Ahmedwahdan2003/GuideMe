@@ -1,25 +1,25 @@
+// visualizegraph.h
 #ifndef VISUALIZEGRAPH_H
 #define VISUALIZEGRAPH_H
+
+#include <QGraphicsView>
 #include "graph.h"
-#include <QGraphicsWidget>
 
-class visualizeGraph : public QGraphicsWidget
-
+class visualizeGraph : public QGraphicsView
 {
     Q_OBJECT
 public:
-    explicit visualizeGraph(QGraphicsItem *parent = nullptr);
+    explicit visualizeGraph(QWidget *parent = nullptr);
 
+    // Function to set the graph to be visualized
+    void setGraph(Graph* graph);
 
-    void setGraph(Graph *mygraph);
+signals:
 
-    void visualizeDFS(std::vector<Node> &path);
-    void visualizeBFS(std::vector<Node> &path);
-protected:
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+public slots:
 
 private:
-    Graph* graph;
+    Graph* graph; // Pointer to the graph object
 };
 
 #endif // VISUALIZEGRAPH_H
