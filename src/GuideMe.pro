@@ -13,11 +13,13 @@ CONFIG += c++17
 SOURCES += \
     graph.cpp \
     home.cpp \
-    main.cpp
+    main.cpp \
+    visualizegraph.cpp
 
 HEADERS += \
     graph.h \
-    home.h
+    home.h \
+    visualizegraph.h
 
 FORMS += \
     home.ui

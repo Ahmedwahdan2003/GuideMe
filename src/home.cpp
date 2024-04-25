@@ -16,7 +16,7 @@
         }
 
         // Read graph data from file
-        if (!graph->readGraphFile("E:\\Year Two\\Semester 4\\Data Structures\\GuideMe\\GuideMe\\src\\Graph.txt")) {
+        if (!graph->readGraphFile("C:\\Users\\ahmed\\Desktop\\GUIDE_ME\\GuideMe\\src\\Graph.txt")) {
             qDebug() << "Failed to read graph data from file";
             delete graph; // Free the allocated memory
             return;

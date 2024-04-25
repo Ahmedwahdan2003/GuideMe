@@ -121,7 +121,10 @@ Node back();
  void printGraph();
  void addNode( Node newNode);
  std::vector<Edge>getEdges(Node Source);
- std::vector<Node>getNodes();
+std::vector<Node> getNodes() ;
+std::vector<Node>& getNodesRef() const;
+const std::vector<Edge>& getEdgesRef() const;
+ std::vector<Edge>getEdges();
  bool empty();
  void addEdge(Node From,Node dest,Transportation opt);
  void updateEdge(Edge Target);                                          //{WAHDAN}==> THESE FUNCTIONS WILL BE IMPLEMENTED BY [RAHAF-RAWAN,BASMALA1]
@@ -130,7 +133,6 @@ Node back();
 
  std::vector<Node> DFS(Node& StartNode);
  std::vector<Node> BFS(Node& StartNode);
- std::vector<Edge>getEdges();
  static Graph& getInstance() {
      // Static local variable to ensure it's initialized only once
      static Graph instance;

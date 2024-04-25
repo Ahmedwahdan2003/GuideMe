@@ -46,8 +46,38 @@ std::vector<Node> Graph::getNodes()
     return result;
 }
 
+std::vector<Edge> Graph::getEdges(){
 
+    std::vector<Edge> allEdges;
 
+    // Iterate through each node in the adjacency list
+    for (const auto& adjacencyPair : adjcencyList) {
+        // Retrieve the vector of edges associated with the current node
+        const std::vector<Edge>& edges = adjacencyPair.second;
+
+        // Append the edges to the 'allEdges' vector
+        allEdges.insert(allEdges.end(), edges.begin(), edges.end());
+    }
+
+    return allEdges;
+}
+
+ std::vector<Node>& Graph::getNodesRef() const {
+    static std::vector<Node> nodes; // Static to ensure it persists
+    nodes.clear(); // Clear the vector to ensure it's up-to-date
+    for (const auto& keyValuePair : adjcencyList) {
+        nodes.push_back(keyValuePair.first);
+    }
+    return nodes;
+}
+const std::vector<Edge>& Graph::getEdgesRef() const {
+    static std::vector<Edge> edges; // Static to ensure it persists
+    edges.clear(); // Clear the vector to ensure it's up-to-date
+    for (const auto& keyValuePair : adjcencyList) {
+        edges.insert(edges.end(), keyValuePair.second.begin(), keyValuePair.second.end());
+    }
+    return edges;
+}
 void Graph::addEdge(Node From,Node dest,Transportation opt){
     addNode(From);
     addNode(dest);
@@ -225,19 +255,4 @@ std::vector<Node> Graph::BFS(Node& StartNode)
     }
 
     return path;
-}
-std::vector<Edge> Graph::getEdges(){
-
-    std::vector<Edge> allEdges;
-
-    // Iterate through each node in the adjacency list
-    for (const auto& adjacencyPair : adjcencyList) {
-        // Retrieve the vector of edges associated with the current node
-        const std::vector<Edge>& edges = adjacencyPair.second;
-
-        // Append the edges to the 'allEdges' vector
-        allEdges.insert(allEdges.end(), edges.begin(), edges.end());
-    }
-
-    return allEdges;
 }
