@@ -77,7 +77,9 @@ struct Edge {
     endX=1;
     endY=1;
     }
-
+    bool operator==(const Edge& other) const {
+        return parent == other.parent && destination == other.destination && option.cost == other.option.cost && option.name == other.option.name;
+    }
     // Getter for parent
     Node getParent() const {
         return parent;
