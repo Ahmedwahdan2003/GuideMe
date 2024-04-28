@@ -1,6 +1,7 @@
 #ifndef HOME_H
 #define HOME_H
 #include <QMainWindow>
+ #include "visualizegraph.h"
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class Home;
@@ -19,7 +20,7 @@ public:
 
 private:
     Ui::Home *ui;
-
+visualizeGraph* graphWidget = new visualizeGraph(this);
 
 public slots:
     void btn_1_handle();

@@ -29,6 +29,12 @@
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
         </spacer>
        </item>
       </layout>
@@ -80,18 +86,18 @@
  <resources/>
  <connections>
   <connection>
-   <sender>Add_btn</sender>
+   <sender>DFS_btn</sender>
    <signal>clicked()</signal>
    <receiver>Home</receiver>
    <slot>btn_1_handle()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>984</x>
-     <y>417</y>
+     <x>1183</x>
+     <y>224</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1056</x>
-     <y>333</y>
+     <x>1183</x>
+     <y>194</y>
     </hint>
    </hints>
   </connection>

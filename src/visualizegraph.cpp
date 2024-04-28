@@ -9,6 +9,8 @@ unsigned int visualizeGraph::NodesDrawnidx = 0; // Initialize static member
 bool visualizeGraph::flag = false;
 std::map<QString,QPointF>visualizeGraph::nodesPostitions =std::map<QString,QPointF>() ;
 std::unordered_set<std::tuple<QString, QString, QString>,TupleHash> visualizeGraph::edgesDrawn;
+QTimer* animationTimer; // Timer for animation
+unsigned int dfsIndex;
 visualizeGraph::visualizeGraph(QWidget *parent) : QGraphicsView(parent), graph(nullptr)
 {
     // Set up the QGraphicsView
@@ -21,7 +23,7 @@ visualizeGraph::visualizeGraph(QWidget *parent) : QGraphicsView(parent), graph(n
 
 }
 
-void visualizeGraph::setGraph(Graph* graph)
+void visualizeGraph::setGraph(Graph* graph)   //{WAHDAN}==> Dependency injection
 {
     this->graph = graph;
     if (!graph)
@@ -31,61 +33,6 @@ void visualizeGraph::setGraph(Graph* graph)
     scene()->clear();
     NodesLeft = graph->getNodes().size();
     NodesDrawnidx=0;
-    // for (const auto& edge : graph->getEdges()) {
-    //     edgesDrawn.insert({edge.parent.getNodeName(), edge.destination.getNodeName()});
-    // }
-     // QGraphicsTextItem* counterText = scene()->addText(QString("Nodes Left: %1").arg(NodesLeft));
-     // counterText->setPos(0, 0); // Adds 10 pixels padding from top and left edges
-
-    // Get nodes and edges from the graph
-    // std::vector<Node> nodes = graph->getNodes();
-    // std::vector<Edge> edges = graph->getEdges();
-
-    // // Draw nodes
-    // for (const auto& node : nodes) {
-    //     // Draw the ellipse representing the node
-    //     QGraphicsEllipseItem* nodeItem = scene()->addEllipse(
-    //         node.centerX - node.radius, node.centerY - node.radius,
-    //         2 * node.radius, 2 * node.radius
-    //         );
-    //     nodeItem->setBrush(Qt::red);
-
-    //     // Set the node name as the tooltip
-    //     nodeItem->setToolTip(node.nodeName);
-
-    //     // Create a text item for displaying the node name
-    //     QGraphicsTextItem* nodeNameItem = scene()->addText(node.nodeName);
-    //     nodeNameItem->setPos(node.centerX - nodeNameItem->boundingRect().width() / 2,
-    //                          node.centerY - nodeNameItem->boundingRect().height() / 2);
-
-   //  }
-
-
-   // // Draw edges
-   //  for (const auto& edge : edges) {
-   //      // Get coordinates of start and end nodes
-   //      float startX = edge.parent.centerX;
-   //      float startY = edge.parent.centerY;
-   //      float endX = edge.destination.centerX;
-   //      float endY = edge.destination.centerY;
-
-   //      // Draw edge line
-   //      QGraphicsLineItem* edgeItem = scene()->addLine(
-   //          startX, startY, endX, endY
-   //          );
-
-   //      // Set edge options as tooltip
-   //      edgeItem->setToolTip(edge.option.getName());
-
-   //      // Calculate the position to draw the cost
-   //      QPointF textPos((startX + endX) / 2, (startY + endY) / 2);
-
-   //      // Draw the cost on the edge
-   //      QGraphicsSimpleTextItem* costText = scene()->addSimpleText(
-   //          QString::number(edge.option.getCost())
-   //          );
-   //      costText->setPos(textPos);
-   //  }
 }
 
 void visualizeGraph::drawNode(const Node& node)
@@ -109,89 +56,70 @@ void visualizeGraph::drawNode(const Node& node)
 void visualizeGraph::drawEdge(const Node& node)
 {
     // Get all edges connected to the node
-
     QPointF nodePos = nodesPostitions[node.nodeName];
-
-    // Get all edges connected to the node
     std::vector<Edge> edges = graph->getEdges(node);
 
-    // Calculate the angle increment between edges
-    qreal angleIncrement = (2 * M_PI) / edges.size();
-
-    // Start angle for the first edge
-    qreal startAngle = -M_PI / 2;
-
     // Draw each edge with a slight offset
-        for (const auto& edge : edges) {
-            std::tuple<QString, QString, QString> edgeTuple(edge.parent.nodeName, edge.destination.nodeName, edge.option.getName());
-            std::tuple<QString, QString, QString> edgeTuple2(edge.destination.nodeName, edge.parent.nodeName, edge.option.getName());            // Include transportation name
-            if (edgesDrawn.find(edgeTuple) != edgesDrawn.end()) {
-                continue; // Skip drawing this edge
-            }
-            edgesDrawn.insert(edgeTuple);
-            if (edgesDrawn.find(edgeTuple2) != edgesDrawn.end()) {
-                continue; // Skip drawing this edge
-            }
-            edgesDrawn.insert(edgeTuple2);
-
-        // Find the index of the current edge within the vector of edges
-        auto it = std::find(edges.begin(), edges.end(), edge);
-        if (it == edges.end()) {
-            // Edge not found, skip drawing
-            continue;
+    qreal angleIncrement = (2 * M_PI) / edges.size();
+    qreal startAngle = -M_PI / 2;
+    qreal t = 0.1;
+    int counter = 1;
+    qreal spacing = 10;
+    float edgeoffset = 1;
+    for (const auto& edge : edges) {
+        std::tuple<QString, QString, QString> edgeTuple(edge.parent.nodeName, edge.destination.nodeName, edge.option.getName());
+        std::tuple<QString, QString, QString> edgeTuple2(edge.destination.nodeName, edge.parent.nodeName, edge.option.getName());            // Include transportation name
+        if (edgesDrawn.find(edgeTuple) != edgesDrawn.end()) {
+            continue; // Skip drawing this edge
         }
-        int index = std::distance(edges.begin(), it);
-
+        edgesDrawn.insert(edgeTuple);
+        if (edgesDrawn.find(edgeTuple2) != edgesDrawn.end()) {
+            continue; // Skip drawing this edge
+        }
+        edgesDrawn.insert(edgeTuple2);
+        edgeoffset+=1;
         // Calculate the angle between the two nodes
-        qreal angle = startAngle + (angleIncrement * index);
+        qreal angle = startAngle;
+        startAngle += angleIncrement;
 
-        // Calculate the perpendicular offset for each edge
-        qreal offsetX = 20 * qSin(angle); // 20 can be adjusted for the desired spacing
-        qreal offsetY = 20 * qCos(angle); // 20 can be adjusted for the desired spacing
+        // Calculate the start and end positions for the line
+        QPointF startPos = nodePos + QPointF(node.radius * qCos(angle), node.radius * qSin(angle));
+        QPointF endPos = nodesPostitions[edge.destination.nodeName] + QPointF(node.radius * qCos(angle), node.radius * qSin(angle)); // Adjust end position to node perimeter
 
-        // Get coordinates of start and end nodes using updated positions
-        QPointF startPos = nodePos + QPointF(offsetX, offsetY);
-        QPointF endPos = nodesPostitions[edge.destination.nodeName];
+        // Draw straight line
+        QGraphicsLineItem* lineItem = scene()->addLine(startPos.x(), startPos.y()+edgeoffset, endPos.x(), endPos.y());
 
-        // Draw edge line with adjusted positions
-        QGraphicsLineItem* edgeItem = scene()->addLine(
-            startPos.x(), startPos.y(),
-            endPos.x(), endPos.y()
-            );
-        // Set edge options as tooltip
-        QString tooltipText = edge.option.getName() + " (" + QString::number(edge.option.getCost()) + ")";
-        edgeItem->setToolTip(tooltipText);
-        QPointF textPos = (startPos + endPos) / 2;
-        // Calculate the angle of the edge
-        // Rotate the text to align with the edge
-        QTransform transform;
-        transform.rotateRadians(angle);
-        QFont font = QApplication::font(); // Use default font
-        QFontMetrics fm(font);
-        int textWidth = fm.horizontalAdvance(tooltipText); // Calculate width of the text
-        int textHeight = fm.height(); // Calculate height of the text
-        QPointF rotatedTextPos = transform.map(QPointF(-textWidth / 2, textHeight)); // Rotate the text position
+        // Add the path to the scene
+        QString tooltipText = QString::number(edge.option.getCost());
+        lineItem->setToolTip(tooltipText);
 
-        // Draw the text on the scene
-        QGraphicsSimpleTextItem* textItem = scene()->addSimpleText(tooltipText);
-        textItem->setPos(textPos - rotatedTextPos); // Set the position of the text
-        textItem->setTransform(transform); // Apply the rotation transform to the text
+        // Calculate position for text along the line
+        if (counter % 3 == 0)
+        {
+            t += 0.2;
+            edgeoffset=1;
+        }
+        QPointF textPos = startPos * (1 - t) + endPos * t;
 
+        // Set edge transportation name on the line
+        QGraphicsSimpleTextItem* textItem = scene()->addSimpleText(edge.option.getName());
+        qreal nameOffsetX = spacing * qSin(angle); // Adjust this value for desired spacing
+        qreal nameOffsetY = spacing * qCos(angle); // Adjust this value for desired spacing
+        textItem->setPos(textPos.x() + nameOffsetX, textPos.y() + nameOffsetY);
+        counter++;
+    }
 }
-}
-
-
-
 void visualizeGraph::mousePressEvent(QMouseEvent *event)
 {
     QGraphicsView::mousePressEvent(event);
 
-     std::vector<Node> nodes = graph->getNodes(); // Get nodes by reference
+    std::vector<Node> nodes = graph->getNodes(); // Get nodes by reference
     std::vector<Edge> edges = graph->getEdges(); // Get edges by const reference
 
     if (NodesLeft > 0) {
         // Get the position where the user clicked
         QPointF clickPos = mapToScene(event->pos());
+
 
         // Create a new node at the position of the click
         Node newNode = nodes[NodesDrawnidx]; // Get a reference to the node
@@ -209,7 +137,6 @@ void visualizeGraph::mousePressEvent(QMouseEvent *event)
 
     // Check if all nodes have been drawn
     if (NodesLeft == 0) {
-
         // Draw the edges using the updated node positions
         for (const auto& node : nodes) {
             drawEdge(node);
@@ -234,3 +161,112 @@ void visualizeGraph::updateNodeCounter()
     //     }
     // }
 }
+// Slot for animating DFS
+void visualizeGraph::drawArrowToPoint(const QPointF& targetPos)
+{
+    // Get the center position of the target node
+    QPointF nodeCenterPos = targetPos;
+
+    // Get the position of the current node (assuming it's the center of the scene)
+    QPointF centerPos = nodeCenterPos+QPointF(60,60);
+
+    // Calculate the vector from the center position to the target position
+    QPointF vectorToTarget = nodeCenterPos - centerPos;
+
+    // Calculate the length of the vector
+    qreal vectorLength = sqrt(vectorToTarget.x() * vectorToTarget.x() + vectorToTarget.y() * vectorToTarget.y());
+
+    // Calculate the normalized vector (unit vector) pointing towards the target
+    QPointF normalizedVector(vectorToTarget.x() / vectorLength, vectorToTarget.y() / vectorLength);
+
+    // Calculate the end position of the arrow (tip at the perimeter of the node)
+    qreal nodeRadius = 20; // Assuming a fixed node radius, adjust as needed
+    qreal endX = nodeCenterPos.x() - normalizedVector.x() * nodeRadius;
+    qreal endY = nodeCenterPos.y() - normalizedVector.y() * nodeRadius;
+
+    // Calculate the angle of the arrow
+    qreal angle = atan2(nodeCenterPos.y() - endY, nodeCenterPos.x() - endX) * 180 / M_PI;
+
+    // Create a polygon representing the arrowhead
+    QPolygonF arrowhead;
+    arrowhead << QPointF(0, 0) << QPointF(-10, 5) << QPointF(-10, -5);
+
+    // Rotate the arrowhead polygon to match the angle of the arrow
+    QTransform transform;
+    transform.rotate(angle);
+    arrowhead = transform.map(arrowhead);
+
+    // Draw the arrowhead
+    arrowheadItem = scene()->addPolygon(arrowhead);
+    arrowheadItem->setBrush(Qt::black);
+    arrowheadItem->setPos(endX, endY);
+
+    // Draw the line segment from the center to the arrowhead
+    lineItem = scene()->addLine(centerPos.x(), centerPos.y(), endX, endY);
+    lineItem->setPen(QPen(Qt::black, 5, Qt::SolidLine, Qt::RoundCap));
+}
+
+
+
+
+void visualizeGraph::startDFSAnimation()
+{
+    // Reset the animation timer
+    if (!animationTimer) {
+        animationTimer = new QTimer(this);
+        connect(animationTimer, &QTimer::timeout, this, &visualizeGraph::animateDFS);
+    }
+
+    // Set the DFS path and reset index
+    dfsIndex = 0;
+    std::vector<Node>dfsPath = graph->DFS(graph->getNodes()[0]);
+
+    // Start the animation timer
+    animationTimer->start(1000); // Adjust interval as needed
+}
+
+void visualizeGraph::animateDFS()
+{
+    std::vector<Node> dfsPath = graph->DFS(graph->getNodes()[0]);
+    // Check if there are nodes left to draw
+    if (dfsIndex < dfsPath.size()) {
+        // Get the current node from the DFS path
+        const Node& currentNode = dfsPath[dfsIndex];
+
+        // Calculate the position of the current node dynamically
+        QPointF nodePos = nodesPostitions[currentNode.nodeName];
+
+        // Remove the previously drawn arrow and line, if they exist
+        if (arrowheadItem) {
+            scene()->removeItem(arrowheadItem);
+            delete arrowheadItem;
+            arrowheadItem = nullptr;
+        }
+        if (lineItem) {
+            scene()->removeItem(lineItem);
+            delete lineItem;
+            lineItem = nullptr;
+        }
+
+        // Draw the arrow pointing at the current node
+        drawArrowToPoint(nodePos);
+
+        // Increment index for the next node
+        ++dfsIndex;
+    } else {
+        // Animation finished, stop the timer
+        if (arrowheadItem) {
+            scene()->removeItem(arrowheadItem);
+            delete arrowheadItem;
+            arrowheadItem = nullptr;
+        }
+        if (lineItem) {
+            scene()->removeItem(lineItem);
+            delete lineItem;
+            lineItem = nullptr;
+        }
+        animationTimer->stop();
+    }
+}
+
+
