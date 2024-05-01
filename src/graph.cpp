@@ -256,3 +256,28 @@ std::vector<Node> Graph::BFS(Node& StartNode)
 
     return path;
 }
+bool Graph::isCompleteGraph() {
+    // Get all nodes in the graph
+    std::vector<Node> nodes = getNodes();
+
+    // Iterate through each pair of nodes
+    for (size_t i = 0; i < nodes.size(); ++i) {
+        for (size_t j = i + 1; j < nodes.size(); ++j) {
+            // Check if there is an edge between node i and node j
+            bool foundEdge = false;
+            std::vector<Edge> edges = getEdges(nodes[i]);
+            for (const Edge& edge : edges) {
+                if (edge.getDestination() == nodes[j]) {
+                    foundEdge = true;
+                    break;
+                }
+            }
+            // If there is no edge between node i and node j, the graph is not complete
+            if (!foundEdge) {
+                return false;
+            }
+        }
+    }
+    // If no missing edges were found between any pair of nodes, the graph is complete
+    return true;
+}

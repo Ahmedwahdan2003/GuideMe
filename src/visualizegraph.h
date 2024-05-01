@@ -5,12 +5,6 @@
 #include <QGraphicsView>
 #include "graph.h"
 #include<qtimer.h>
-struct PairHash {
-    std::size_t operator()(const std::pair<QString, QString>& pair) const {
-        // Combine hashes of both QStrings in the pair
-        return qHash(pair.first) ^ (qHash(pair.second) << 1);
-    }
-};
 struct TupleHash {
     std::size_t operator()(const std::tuple<QString, QString, QString>& tuple) const {
         // Hash each element of the tuple individually and combine the hashes
@@ -24,9 +18,14 @@ class visualizeGraph : public QGraphicsView
 public:
     static unsigned int NodesLeft;
     static unsigned int NodesDrawnidx;
+    static size_t algosindex;
+    static std::vector<Node>dfspath;
+    static std::vector<Node>bfspath;
+    QTimer animationTimer;
+    QTimer animationTimertwo;
     static bool flag;
     static std::map<QString,QPointF>nodesPostitions;
-   static std::unordered_set<std::tuple<QString, QString, QString>,TupleHash> edgesDrawn;
+    static std::unordered_set<std::tuple<QString, QString, QString>,TupleHash> edgesDrawn;
     explicit visualizeGraph(QWidget *parent = nullptr);
     QGraphicsPolygonItem* arrowheadItem;
     QGraphicsLineItem* lineItem;
@@ -37,14 +36,15 @@ public:
     void mousePressEvent(QMouseEvent *event) override;
     void drawArrowToPoint(const QPointF& targetPos);
     void animateDFS();
-
+    void animateBFS();
     // Index of the next node to draw
 signals:
 
- void allNodesDrawn();
+    void allNodesDrawn();
 public slots:
-void startDFSAnimation();
-void updateNodeCounter();
+    void startDFSAnimation();
+    void startBFSAnimation();
+    void updateNodeCounter();
 private:
     Graph* graph; // Pointer to the graph object
 };

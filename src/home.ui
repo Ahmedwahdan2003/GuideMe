@@ -43,6 +43,13 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>complete</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="BFS_btn">
         <property name="text">
          <string>BFS</string>

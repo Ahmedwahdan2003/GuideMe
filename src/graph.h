@@ -42,6 +42,11 @@ struct Node {
         centerY=y;
         radius=20;
     }
+    Node(QString Name) : nodeName(std::move(Name)) {
+        centerX=0;
+        centerY=0;
+        radius=20;
+    }
     Node(QString name,int cenX,int cenY,int rad):nodeName(name),centerX(cenX),centerY(cenY),radius(rad){
 
     }
@@ -142,3 +147,4 @@ const std::vector<Edge>& getEdgesRef() const;
  }
 };
 #endif // GRAPH_H
+

@@ -29,5 +29,11 @@ public slots:
      // void layoutGraph();
 
 
+private slots:
+    void on_Add_btn_clicked();
+    void on_Update_btn_clicked();
+    void on_Del_btn_clicked();
+    void on_pushButton_clicked();
+    void on_BFS_btn_clicked();
 };
 #endif // HOME_H
