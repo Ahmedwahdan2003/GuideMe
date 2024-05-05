@@ -56,7 +56,6 @@ std::vector<Edge> Graph::getEdges(){
 
     // Iterate through each node in the adjacency list
     for (const auto& adjacencyPair : adjcencyList) {
-        // Retrieve the vector of edges associated with the current node
         const std::vector<Edge>& edges = adjacencyPair.second;
 
         // Append the edges to the 'allEdges' vector
@@ -67,16 +66,16 @@ std::vector<Edge> Graph::getEdges(){
 }
 
  std::vector<Node>& Graph::getNodesRef() const {
-    static std::vector<Node> nodes; // Static to ensure it persists
-    nodes.clear(); // Clear the vector to ensure it's up-to-date
+    static std::vector<Node> nodes;
+    nodes.clear();
     for (const auto& keyValuePair : adjcencyList) {
         nodes.push_back(keyValuePair.first);
     }
     return nodes;
 }
 const std::vector<Edge>& Graph::getEdgesRef() const {
-    static std::vector<Edge> edges; // Static to ensure it persists
-    edges.clear(); // Clear the vector to ensure it's up-to-date
+    static std::vector<Edge> edges;
+    edges.clear();
     for (const auto& keyValuePair : adjcencyList) {
         edges.insert(edges.end(), keyValuePair.second.begin(), keyValuePair.second.end());
     }
@@ -225,121 +224,7 @@ std::vector<Node> Graph::BFS(Node& StartNode)
 
     return path;
 }
-/*bool Graph::hasEdge(const Node& source, const Node& destination) const {
-    // Check if the source node exists in the adjacency list
-    auto it = adjcencyList.find(source);
-    if (it != adjcencyList.end()) {
-        // Iterate through the edges of the source node
-        for (const Edge& edge : it->second) {
-            // Check if the destination node matches
-            if (edge.getDestination() == destination) {
-                return true; // Edge found
-            }
-        }
-    }
-    return false; // Edge not found
-}
-*/
-/*bool Graph::isCompleteGraph() {
-
-        // Iterate through each node in the adjacency list
-        for (const auto& pair1 : adjcencyList) {
-            const Node& sourceNode = pair1.first;
-            const std::unordered_set<QString> connectedNodes = getConnectedNodes(sourceNode);
-
-            if (connectedNodes.size() != adjcencyList.size() - 1) {
-                return false; // Not complete
-            }
-            for (const auto& pair2 : adjcencyList) {
-                const Node& destNode = pair2.first;
-
-                // Skip if source node is the same as destination node
-                if (sourceNode == destNode) continue;
-
-                // If the destination node is not found in the connected nodes of the source node, return false
-                if (connectedNodes.find(destNode.getNodeName()) == connectedNodes.end()) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    std::unordered_set<QString> Graph::getConnectedNodes(const Node& node) const {
-        std::unordered_set<QString> connectedNodes;
-
-        // Get the set of connected nodes for the given source node
-        for (const auto& edge : adjcencyList.at(node)) {
-            connectedNodes.insert(edge.getDestination().getNodeName());
-        }
-
-        return connectedNodes;
-    }
-
-
-
-bool Graph::isCompleteGraph() {
-    // Iterate through each node in the adjacency list
-    for (const auto& pair1 : adjcencyList) {
-        const Node& sourceNode = pair1.first;
-        const std::unordered_set<QString> connectedNodes = getConnectedNodes(sourceNode);
-
-        // Check if the number of connected nodes is equal to the total number of nodes - 1
-        if (connectedNodes.size() != adjcencyList.size() - 1) {
-            return false; // Not complete
-        }
-
-        // Check if each node is connected to every other node
-        for (const auto& pair2 : adjcencyList) {
-            const Node& destNode = pair2.first;
-
-         // Skip if source node is the same as destination node
-            if (sourceNode == destNode) continue;
-
-            // If the destination node is not found in the connected nodes of the source node, return false
-            if (connectedNodes.find(destNode.getNodeName()) == connectedNodes.end()) {
-                return false;
-            }
-        }
-    }
-  return true;
-
-
-bool Graph::isCompleteGraph() {
-    // Check if the graph is empty or has only one node
-    if (adjcencyList.empty() || adjcencyList.size() == 1) {
-        qDebug() << "The graph is not complete because it is empty or has only one node.";
-        return false;
-    }
-
-    // Iterate through each node in the adjacency list
-    for (const auto& pair1 : adjcencyList) {
-        const Node& sourceNode = pair1.first;
-        const std::unordered_set<QString> connectedNodes = getConnectedNodes(sourceNode);
-
-        // Check if the number of connected nodes is equal to the total number of nodes - 1
-        if (connectedNodes.size() != adjcencyList.size() - 1) {
-            qDebug() << "The graph is not complete because node" << sourceNode.getNodeName() << "is not connected to every other node.";
-            return false; // Not complete
-        }
-
-        // Check if each node is connected to every other node
-        for (const auto& pair2 : adjcencyList) {
-            const Node& destNode = pair2.first;
-
-            // Skip if source node is the same as destination node
-            if (sourceNode == destNode) continue;
-
-            // If the destination node is not found in the connected nodes of the source node, return false
-            if (connectedNodes.find(destNode.getNodeName()) == connectedNodes.end()) {
-                qDebug() << "The graph is not complete because node" << sourceNode.getNodeName() << "is not connected to node" << destNode.getNodeName() << ".";
-                return false;
-            }
-        }
-    }
-   qDebug() << "The graph is complete.";
-    return true; // Complete
-}*/ bool Graph::isCompleteGraph() {
+ bool Graph::isCompleteGraph() {
     // Check if the graph is empty or has only one node
     if (adjcencyList.empty() || adjcencyList.size() == 1) {
         qDebug() << "The graph is not complete because it is empty or has only one node.";
@@ -350,17 +235,15 @@ bool Graph::isCompleteGraph() {
     for (const auto& pair1 : adjcencyList) {
         const Node& sourceNode = pair1.first;
 
-        // Create a set to store connected nodes
+        // store connected nodes
         std::unordered_set<QString> getConnectedNodes;
 
         // Check if the current node is connected to every other node
         for (const auto& pair2 : adjcencyList) {
             const Node& destNode = pair2.first;
 
-            // Skip if source node is the same as destination node
             if (sourceNode == destNode) continue;
 
-            // Check if the destination node is connected to the source node
             bool connected = false;
             for (const auto& edge : adjcencyList.at(sourceNode)) {
                 if (edge.getDestination() == destNode) {
@@ -368,8 +251,6 @@ bool Graph::isCompleteGraph() {
                     break;
                 }
             }
-
-            // If the destination node is not connected to the source node, the graph is not complete
             if (!connected) {
                 qDebug() << "The graph is not complete because node" << sourceNode.getNodeName() << "is not connected to node" << destNode.getNodeName() << ".";
                 return false;
@@ -381,10 +262,10 @@ bool Graph::isCompleteGraph() {
     return true;
 }
 
-   const std::unordered_set<QString> Graph::getConnectedNodes(const Node& node) const {
+const std::unordered_set<QString> Graph::getConnectedNodes(const Node& node) const {
         std::unordered_set<QString> connectedNodes;
 
-        // Get the set of connected nodes for the given source node
+        // Get the connected nodes for the given source node
         for (const auto& edge : adjcencyList.at(node)) {
             connectedNodes.insert(edge.getDestination().getNodeName());
         }
@@ -403,13 +284,10 @@ void Graph::updateEdge(const Node& source, const Node& destination, const QStrin
 }
 
 void Graph::deleteEdge(const Node& source, const Node& destination, const QString& transportationName) {
-    // Check if the source node exists in the graph
     if (adjcencyList.find(source) == adjcencyList.end()) {
         qDebug() << "Source node does not exist in the graph.";
         return;
     }
-
-    // Check if the destination node exists in the adjacency list of the source node
     auto& edges = adjcencyList[source];
     auto it = std::find_if(edges.begin(), edges.end(), [&](const Edge& edge) {
         return edge.getDestination() == destination && edge.getOption().getName() == transportationName;
@@ -421,7 +299,7 @@ void Graph::deleteEdge(const Node& source, const Node& destination, const QStrin
         qDebug() << "Edge deleted between " << source.getNodeName() << " and " << destination.getNodeName()
                  << " with transportation: " << transportationName;
 
-        // If the graph is undirected, remove the edge from the destination node's adjacency list
+        // remove the edge from the destination node's adjacency list
         auto& destinationEdges = adjcencyList[destination];
         auto destIt = std::find_if(destinationEdges.begin(), destinationEdges.end(), [&](const Edge& edge) {
             return edge.getDestination() == source && edge.getOption().getName() == transportationName;
@@ -449,14 +327,12 @@ void Graph::writeGraphToFile(const QString& fileName) {
 
     QTextStream out(&file);
 
-    // Define a custom hash function for std::pair<QString, QString>
     struct PairHash {
         std::size_t operator()(const std::pair<QString, QString>& pair) const {
             return qHash(pair.first) ^ qHash(pair.second);
         }
     };
 
-    // Use the custom hash function to initialize the set
     std::unordered_set<std::pair<QString, QString>, PairHash> visitedEdges;
 
     // Iterate through each node in the graph
@@ -471,13 +347,9 @@ void Graph::writeGraphToFile(const QString& fileName) {
             if (visitedEdges.find(std::make_pair(sourceNode.getNodeName(), destNode.getNodeName())) == visitedEdges.end() &&
                 visitedEdges.find(std::make_pair(destNode.getNodeName(), sourceNode.getNodeName())) == visitedEdges.end()) {
 
-                // Write the source and destination node names
                 out << sourceNode.getNodeName() << " " << destNode.getNodeName() << " 0 0 0 0 ";
-
-                // Get the transportation options between the source and destination nodes
                 const std::vector<Edge>& edges = adjcencyList[destNode];
 
-                // Iterate through each edge to check if it connects the source and destination nodes
                 for (const auto& connectedEdge : edges) {
                     if (connectedEdge.getDestination() == sourceNode) {
                         const Transportation& transportation = connectedEdge.getOption();
