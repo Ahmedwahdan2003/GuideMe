@@ -103,6 +103,7 @@ bool Graph::isValidEdge(const QString& sourceNode, const QString& destinationNod
     return false;
 }
 void Graph::addEdge(Node From,Node dest,Transportation opt){
+
     addNode(From);
     addNode(dest);
     Edge newEdge = Edge(From,dest,opt);

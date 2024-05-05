@@ -46,6 +46,10 @@ void updatet::on_pushButton_clicked()
         QMessageBox::critical(this, "Error", "Invalid transportation");
         return;
     }
+    if (sourceu == destinationu) {
+        QMessageBox::critical(this, "Error", "Same source and destination.");
+        return;
+    }
     graph->updateEdge( sourceu,  destinationu, oldTransportationu, newTransportationu, newCostu) ;
     close();
 }

@@ -39,7 +39,10 @@ void addT::on_pushButton_clicked()
             QMessageBox::critical(this, "Error", "Invalid source or destination node.");
             return;
         }
-
+        if (sourceA == destA) {
+            QMessageBox::critical(this, "Error", "Same source and destination.");
+            return;
+        }
         // Add edge to the graph
             int transportationInt = costA.toInt();
             Transportation transportation(transA, transportationInt);
