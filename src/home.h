@@ -14,7 +14,7 @@ class Home : public QMainWindow
 
 public:
 
-
+    Graph* graph;
   Home(QWidget *parent = nullptr);
     ~Home();
 

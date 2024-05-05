@@ -3,6 +3,10 @@
 #include<map>
 #include<vector>
 #include<QString>
+#include<Qhash>
+#include <unordered_set>
+#include <utility>
+
 
 struct Transportation {
     QString name;
@@ -30,6 +34,7 @@ struct Transportation {
         cost = newCost;
     }
 };
+
 
 struct Node {
     QString nodeName;
@@ -115,29 +120,40 @@ struct Edge {
         option = newOption;
     }
 };
-
+struct PairHash {
+    std::size_t operator()(const std::pair<QString, QString>& pair) const {
+        return qHash(pair.first) ^ qHash(pair.second);
+    }
+};
 
 class Graph
 {
 
 private: std::map<Node,std::vector<Edge>>adjcencyList;
+
 public:
     Graph();
+
 Node back();
  bool readGraphFile( const QString&fileName);
  void printGraph();
- void addNode( Node newNode);
+ void addNode( const Node& newNode);
+ void updateEdge(const Node& source, const Node& destination, const QString& oldTransportation, const QString& newTransportation, int newCost) ;
  std::vector<Edge>getEdges(Node Source);
 std::vector<Node> getNodes() ;
 std::vector<Node>& getNodesRef() const;
+ std::vector<Node> getNodes() const;
 const std::vector<Edge>& getEdgesRef() const;
  std::vector<Edge>getEdges();
- bool empty();
- void addEdge(Node From,Node dest,Transportation opt);
- void updateEdge(Edge Target);                                          //{WAHDAN}==> THESE FUNCTIONS WILL BE IMPLEMENTED BY [RAHAF-RAWAN,BASMALA1]
- void deleteEdge(Edge Target);                                          //{WAHDAN}==> A GRAPH IS COMPLETE IF EVERY NODE HAS EDGES TO EVERY OTHER NODE IN THE GRAPH
- bool isCompleteGraph();                                                //{WAHDAN}==> SEARCH ON HOW TO DO IT USING AN ALGORITHM
+ const std::unordered_set<QString> getConnectedNodes(const Node& node) const;
 
+ bool empty();
+ void addEdge(Node From,Node dest,Transportation opt);                                         //{WAHDAN}==> THESE FUNCTIONS WILL BE IMPLEMENTED BY [RAHAF-RAWAN,BASMALA1]
+ void deleteEdge(const Node& source, const Node& destination,const QString& transportationName);                                          //{WAHDAN}==> A GRAPH IS COMPLETE IF EVERY NODE HAS EDGES TO EVERY OTHER NODE IN THE GRAPH
+ bool isCompleteGraph();     //{WAHDAN}==> SEARCH ON HOW TO DO IT USING AN ALGORITHM
+// void writeGraphToFile(const QString& fileName);
+ void writeGraphToFile(const QString& fileName);
+ bool hasEdge(const Node& source, const Node& destination)const;
  std::vector<Node> DFS(Node& StartNode);
  std::vector<Node> BFS(Node& StartNode);
  static Graph& getInstance() {
