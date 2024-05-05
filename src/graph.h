@@ -148,6 +148,8 @@ const std::vector<Edge>& getEdgesRef() const;
  const std::unordered_set<QString> getConnectedNodes(const Node& node) const;
 
  bool empty();
+ bool isValidNode(const QString& nodeName) const;
+ bool isValidEdge(const QString& sourceNode, const QString& destinationNode, const QString& transportationName) const;
  void addEdge(Node From,Node dest,Transportation opt);                                         //{WAHDAN}==> THESE FUNCTIONS WILL BE IMPLEMENTED BY [RAHAF-RAWAN,BASMALA1]
  void deleteEdge(const Node& source, const Node& destination,const QString& transportationName);                                          //{WAHDAN}==> A GRAPH IS COMPLETE IF EVERY NODE HAS EDGES TO EVERY OTHER NODE IN THE GRAPH
  bool isCompleteGraph();     //{WAHDAN}==> SEARCH ON HOW TO DO IT USING AN ALGORITHM

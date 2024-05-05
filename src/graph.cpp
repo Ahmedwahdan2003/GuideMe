@@ -81,6 +81,27 @@ const std::vector<Edge>& Graph::getEdgesRef() const {
     }
     return edges;
 }
+bool Graph::isValidNode(const QString& nodeName) const {
+    // Check if the node exists in the adjacency list
+    return adjcencyList.find(nodeName) != adjcencyList.end();
+}
+
+bool Graph::isValidEdge(const QString& sourceNode, const QString& destinationNode, const QString& transportationName) const {
+    // Check if the source node exists in the adjacency list
+    auto it = adjcencyList.find(sourceNode);
+
+    // Iterate through the edges of the source node to find the destination node and transportation
+    const std::vector<Edge>& edges = it->second;
+    for (const Edge& edge : edges) {
+        if (edge.getDestination().getNodeName() == destinationNode && edge.getOption().getName() == transportationName) {
+            return true; // Edge found
+        }
+    }
+
+    // Edge not found
+    qDebug() << "Edge with transportation" << transportationName << "from" << sourceNode << "to" << destinationNode << "does not exist.";
+    return false;
+}
 void Graph::addEdge(Node From,Node dest,Transportation opt){
     addNode(From);
     addNode(dest);

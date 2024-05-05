@@ -6,6 +6,7 @@
 #include <QStringList>
 #include <QLineEdit>
 #include <QDebug>
+#include<QMessageBox>
 
 addT::addT(Graph *graph, QWidget *parent)
     : QDialog(parent)
@@ -28,9 +29,21 @@ void addT::on_pushButton_clicked()
         QString transA = ui->lineEdit_3->text();
         QString costA = ui->lineEdit_4->text();
 
-            // Add edge to the graph
+        if (sourceA.isEmpty() || destA.isEmpty() || transA.isEmpty() || costA.isEmpty()) {
+            QMessageBox::critical(this, "Error", "Please fill in all fields.");
+            return;
+        }
+
+        // Check if both source and destination nodes are valid in the graph
+        if (!graph->isValidNode(sourceA) || !graph->isValidNode(destA)) {
+            QMessageBox::critical(this, "Error", "Invalid source or destination node.");
+            return;
+        }
+
+        // Add edge to the graph
             int transportationInt = costA.toInt();
             Transportation transportation(transA, transportationInt);
+
             graph->addEdge(sourceA, destA, transportation);
 
 

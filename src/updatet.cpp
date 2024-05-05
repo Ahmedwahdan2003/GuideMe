@@ -7,6 +7,7 @@
 #include <QStringList>
 #include <QLineEdit>
 #include <QDebug>
+#include<QMessageBox>
 
 
 
@@ -31,6 +32,20 @@ void updatet::on_pushButton_clicked()
     QString oldTransportationu = ui->lineEdit_3->text();
     QString newTransportationu = ui->lineEdit_4->text();
     int newCostu = ui->lineEdit_5->text().toInt();
+    if (sourceu.isEmpty() || destinationu.isEmpty() || oldTransportationu.isEmpty()|| newTransportationu.isEmpty()) {
+        QMessageBox::critical(this, "Error", "Please fill in all fields.");
+        return;
+    }
+
+    // Check if both source and destination nodes are valid in the graph
+    if (!graph->isValidNode(sourceu) || !graph->isValidNode(destinationu)) {
+        QMessageBox::critical(this, "Error", "Invalid source or destination node.");
+        return;
+    }
+    if (!graph->isValidEdge(sourceu,destinationu,oldTransportationu)) {
+        QMessageBox::critical(this, "Error", "Invalid transportation");
+        return;
+    }
     graph->updateEdge( sourceu,  destinationu, oldTransportationu, newTransportationu, newCostu) ;
     close();
 }
