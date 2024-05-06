@@ -24,6 +24,7 @@ public:
     QTimer animationTimer;
     QTimer animationTimertwo;
     static bool flag;
+    QPixmap backgroundImage;
     static std::map<QString,QPointF>nodesPostitions;
     static std::unordered_set<std::tuple<QString, QString, QString>,TupleHash> edgesDrawn;
     explicit visualizeGraph(QWidget *parent = nullptr);
@@ -38,6 +39,7 @@ public:
     void drawArrowToPoint(const QPointF& targetPos);
     void animateDFS();
     void animateBFS();
+
     // Index of the next node to draw
 signals:
 

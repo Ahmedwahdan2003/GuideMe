@@ -32,28 +32,54 @@ void visualizeGraph::setGraph(Graph* graph)   //{WAHDAN}==> Dependency injection
     scene()->clear();
     NodesLeft = graph->getNodes().size();
     NodesDrawnidx=0;
+    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map3"); // Adjust the path to your background image
+
+    // Scale the background image to fit the size of the widget
+    QPixmap scaledBackgroundImage = backgroundImage.scaled(1100,1150, Qt::KeepAspectRatio);
+
+    // Create a graphics item for the background
+    QGraphicsPixmapItem* backgroundItem = scene()->addPixmap(scaledBackgroundImage);
+
+    // Set the position of the background item to cover the whole scene
+    backgroundItem->setPos(0, 0);
+
+    // Ensure the background image is behind all other items
+    backgroundItem->setZValue(-100); // Set a low Z-value
+
+    // Optionally, set the aspect ratio mode to ensure the image is not distorted
+    backgroundItem->setTransformationMode(Qt::SmoothTransformation);
+
+    // Create a pixmap item and set the background image
+
 }
 
 void visualizeGraph::drawNode(const Node& node)
 {
-    float centerX = nodesPostitions[node.nodeName].x();
-    float centerY = nodesPostitions[node.nodeName].y();
-    // Draw the ellipse representing the node
-    QGraphicsEllipseItem* nodeItem = scene()->addEllipse(
-        centerX - node.radius, centerY - node.radius,
-        2 * node.radius, 2 * node.radius
-        );
-    nodeItem->setBrush(Qt::red);
+    // Load a custom pin pixmap
+    QPixmap pinPixmap("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\google-maps"); // Adjust the path to your pin image
 
+    // Scale the pin pixmap to desired size
+    int pinSize = 64; // Adjust the size as needed
+    QPixmap scaledPinPixmap = pinPixmap.scaled(pinSize, pinSize, Qt::KeepAspectRatio);
+
+    // Create a graphics item for the pin
+    QGraphicsPixmapItem* pinItem = scene()->addPixmap(scaledPinPixmap);
+    pinItem->setOffset(-scaledPinPixmap.width() / 2, -scaledPinPixmap.height()); // Adjust position to center the pin
+    pinItem->setPos(nodesPostitions[node.nodeName]);
 
     // Set the node name as the tooltip
-    nodeItem->setToolTip(node.nodeName);
+    pinItem->setToolTip(node.nodeName);
 
     // Create a text item for displaying the node name
     QGraphicsTextItem* nodeNameItem = scene()->addText(node.nodeName);
-    nodeNameItem->setPos(centerX - nodeNameItem->boundingRect().width() / 2,
-                         centerY - nodeNameItem->boundingRect().height() / 2);
+    nodeNameItem->setDefaultTextColor(Qt::black); // Adjust text color
+    nodeNameItem->setFont(QFont("Arial", 10)); // Adjust font properties
+    nodeNameItem->setPos(nodesPostitions[node.nodeName].x() - nodeNameItem->boundingRect().width() / 2,
+                         nodesPostitions[node.nodeName].y() - scaledPinPixmap.height() - 20); // Adjust position
+    nodeNameItem->setZValue(1); // Ensure text appears above the pin
 }
+
+
 
 void visualizeGraph::drawEdge(const Node& node)
 {
@@ -115,6 +141,7 @@ void visualizeGraph::drawEdge(const Node& node)
     }
     // edgesDrawn.clear();
 }
+
 
 void visualizeGraph::mousePressEvent(QMouseEvent *event)
 {
@@ -351,4 +378,20 @@ void visualizeGraph::reDraw() {
         drawEdge(node);
     }
     edgesDrawn.clear();
+    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map3"); // Adjust the path to your background image
+
+    // Scale the background image to fit the size of the widget
+    //QPixmap scaledBackgroundImage = backgroundImage.scaled(viewport()->size(), Qt::KeepAspectRatio);
+
+    // Create a graphics item for the background
+    QGraphicsPixmapItem* backgroundItem = scene()->addPixmap(backgroundImage);
+
+    // Set the position of the background item to cover the whole scene
+    backgroundItem->setPos(0, 0);
+
+    // Ensure the background image is behind all other items
+    backgroundItem->setZValue(-100); // Set a low Z-value
+
+    // Optionally, set the aspect ratio mode to ensure the image is not distorted
+    backgroundItem->setTransformationMode(Qt::SmoothTransformation);
 }
