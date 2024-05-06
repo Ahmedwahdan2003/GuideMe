@@ -7,14 +7,16 @@
 #include <QLineEdit>
 #include <QDebug>
 #include<graph.h>
+#include<home.h>
 #include<QMessageBox>
 
 
 
-deletet::deletet(Graph *graph,QWidget *parent)
+deletet::deletet(Graph *graph, visualizeGraph *graphWid ,QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::deletet)
-     , graph(graph)
+    , graph(graph)
+    , graphWid(graphWid)
 {
     ui->setupUi(this);
 }
@@ -47,5 +49,6 @@ void deletet::on_pushButton_clicked()
 
 
     close();
+    graphWid->reDraw();
 }
 

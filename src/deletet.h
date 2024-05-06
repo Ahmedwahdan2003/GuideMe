@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include<graph.h>
-
+#include <home.h>
 namespace Ui {
 class deletet;
 }
@@ -13,7 +13,7 @@ class deletet : public QDialog
     Q_OBJECT
 
 public:
-    explicit deletet(Graph *graph,QWidget *parent = nullptr);
+    explicit deletet(Graph *graph, visualizeGraph *graphWid,QWidget *parent = nullptr);
     ~deletet();
     bool readFromFile(const QString& fileName, QStringList& data);
 
@@ -24,7 +24,7 @@ private slots:
 private:
     Ui::deletet *ui;
     Graph *graph;
-
+    visualizeGraph *graphWid;
 };
 
 #endif // DELETET_H

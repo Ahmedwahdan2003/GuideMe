@@ -1,20 +1,22 @@
 #include "updatet.h"
 #include "ui_updatet.h"
 #include "qdebug.h"
-#include<graph.h>
+#include <graph.h>
 #include <QFile>
 #include <QTextStream>
 #include <QStringList>
 #include <QLineEdit>
 #include <QDebug>
-#include<QMessageBox>
+#include <home.h>
+#include <QMessageBox>
 
 
 
-updatet::updatet(Graph *graph,QWidget *parent)
+updatet::updatet(Graph *graph,visualizeGraph *graphWid ,QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::updatet)
     , graph(graph)
+    , graphWid(graphWid)
 {
     ui->setupUi(this);
 }
@@ -52,4 +54,5 @@ void updatet::on_pushButton_clicked()
     }
     graph->updateEdge( sourceu,  destinationu, oldTransportationu, newTransportationu, newCostu) ;
     close();
+    graphWid->reDraw();
 }

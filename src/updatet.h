@@ -13,7 +13,7 @@ class updatet : public QDialog
     Q_OBJECT
 
 public:
-    explicit updatet(Graph *graph,QWidget *parent = nullptr);
+    explicit updatet(Graph *graph, visualizeGraph *graphWid,QWidget *parent = nullptr);
     ~updatet();
     bool readFromFile(const QString& fileName, QStringList& data);
 
@@ -24,6 +24,7 @@ private slots:
 private:
     Ui::updatet *ui;
     Graph *graph;
+    visualizeGraph *graphWid;
 };
 
 

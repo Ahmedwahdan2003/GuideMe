@@ -68,14 +68,14 @@ void Home::on_Add_btn_clicked()
 
 void Home::on_Del_btn_clicked()
 {
-    deletet *form = new deletet(graph, this);
+    deletet *form = new deletet(graph,graphWidget, this);
     form->show();
 }
 
 
 void Home::on_Update_btn_clicked()
 {
-    updatet *form = new updatet(graph,this);
+    updatet *form = new updatet(graph,graphWidget,this);
    form->show();
 }
 
