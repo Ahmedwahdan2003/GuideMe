@@ -32,7 +32,7 @@ void visualizeGraph::setGraph(Graph* graph)   //{WAHDAN}==> Dependency injection
     scene()->clear();
     NodesLeft = graph->getNodes().size();
     NodesDrawnidx=0;
-    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map3"); // Adjust the path to your background image
+    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map"); // Adjust the path to your background image
 
     // Scale the background image to fit the size of the widget
     QPixmap scaledBackgroundImage = backgroundImage.scaled(1100,1150, Qt::KeepAspectRatio);
@@ -59,7 +59,7 @@ void visualizeGraph::drawNode(const Node& node)
     QPixmap pinPixmap("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\google-maps"); // Adjust the path to your pin image
 
     // Scale the pin pixmap to desired size
-    int pinSize = 64; // Adjust the size as needed
+    int pinSize = 32; // Adjust the size as needed
     QPixmap scaledPinPixmap = pinPixmap.scaled(pinSize, pinSize, Qt::KeepAspectRatio);
 
     // Create a graphics item for the pin
@@ -378,7 +378,7 @@ void visualizeGraph::reDraw() {
         drawEdge(node);
     }
     edgesDrawn.clear();
-    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map3"); // Adjust the path to your background image
+    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map"); // Adjust the path to your background image
 
     // Scale the background image to fit the size of the widget
     //QPixmap scaledBackgroundImage = backgroundImage.scaled(viewport()->size(), Qt::KeepAspectRatio);
