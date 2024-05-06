@@ -36,9 +36,11 @@ void visualizeGraph::setGraph(Graph* graph)   //{WAHDAN}==> Dependency injection
 
 void visualizeGraph::drawNode(const Node& node)
 {
+    float centerX = nodesPostitions[node.nodeName].x();
+    float centerY = nodesPostitions[node.nodeName].y();
     // Draw the ellipse representing the node
     QGraphicsEllipseItem* nodeItem = scene()->addEllipse(
-        node.centerX - node.radius, node.centerY - node.radius,
+        centerX - node.radius, centerY - node.radius,
         2 * node.radius, 2 * node.radius
         );
     nodeItem->setBrush(Qt::red);
@@ -49,8 +51,8 @@ void visualizeGraph::drawNode(const Node& node)
 
     // Create a text item for displaying the node name
     QGraphicsTextItem* nodeNameItem = scene()->addText(node.nodeName);
-    nodeNameItem->setPos(node.centerX - nodeNameItem->boundingRect().width() / 2,
-                         node.centerY - nodeNameItem->boundingRect().height() / 2);
+    nodeNameItem->setPos(centerX - nodeNameItem->boundingRect().width() / 2,
+                         centerY - nodeNameItem->boundingRect().height() / 2);
 }
 
 void visualizeGraph::drawEdge(const Node& node)
@@ -111,8 +113,9 @@ void visualizeGraph::drawEdge(const Node& node)
         textItem->setPos(textPos.x() + nameOffsetX, textPos.y() + nameOffsetY);
         counter++;
     }
-
+    // edgesDrawn.clear();
 }
+
 void visualizeGraph::mousePressEvent(QMouseEvent *event)
 {
     QGraphicsView::mousePressEvent(event);
@@ -145,11 +148,9 @@ void visualizeGraph::mousePressEvent(QMouseEvent *event)
         for (const auto& node : nodes) {
             drawEdge(node);
         }
+        edgesDrawn.clear();
     }
 }
-
-
-
 
 
 void visualizeGraph::updateNodeCounter()
@@ -210,8 +211,6 @@ void visualizeGraph::drawArrowToPoint(const QPointF& targetPos)
         qDebug() << "Unknown exception caught in drawArrowToPoint";
     }
 }
-
-
 
 
 void visualizeGraph::startDFSAnimation()
@@ -340,4 +339,16 @@ void visualizeGraph::animateBFS(){
         qDebug() << "Unknown exception caught in drawArrowToPoint";
     }
 }
+void visualizeGraph::reDraw() {
+    scene()->clear();
+    // Get all nodes from the graph
+    std::vector<Node> nodes = graph->getNodes();
 
+    // Iterate through each node
+    for (const auto& node : nodes)
+    {
+        drawNode(node);
+        drawEdge(node);
+    }
+    edgesDrawn.clear();
+}

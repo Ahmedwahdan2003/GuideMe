@@ -13,15 +13,13 @@ class Home : public QMainWindow
     Q_OBJECT
 
 public:
-
+    visualizeGraph* graphWidget = new visualizeGraph(this);
     Graph* graph;
-  Home(QWidget *parent = nullptr);
+    Home(QWidget *parent = nullptr);
     ~Home();
 
 private:
     Ui::Home *ui;
-visualizeGraph* graphWidget = new visualizeGraph(this);
-
 public slots:
     void btn_1_handle();
     void btn_1_handle2();

@@ -19,7 +19,7 @@ Home::Home(QWidget *parent) : QMainWindow(parent), ui(new Ui::Home), graph(new G
     }
 
     // Read graph data from file
-    if (!graph->readGraphFile("C:\\Users\\User\\OneDrive\\Desktop\\New folder (4)\\GuideMe\\src\\Graph.txt")) {
+    if (!graph->readGraphFile("E:\\Year Two\\Semester 4\\Data Structures\\GuideMe\\src\\Graph.txt")) {
         qDebug() << "Failed to read graph data from file";
         delete graph;
         return;
@@ -38,7 +38,7 @@ Home::Home(QWidget *parent) : QMainWindow(parent), ui(new Ui::Home), graph(new G
 
 Home::~Home()
 {
-    graph->writeGraphToFile("C:\\Users\\User\\OneDrive\\Desktop\\New folder (4)\\GuideMe\\src\\Graph.txt");
+    graph->writeGraphToFile("E:\\Year Two\\Semester 4\\Data Structures\\GuideMe\\src\\Graph.txt");
     delete graph;
     delete ui;
 
@@ -59,7 +59,7 @@ void Home::ADDnode(){
 void Home::on_Add_btn_clicked()
 {
 
-        addT *addTransportation = new addT(graph, this);
+        addT *addTransportation = new addT(graph,graphWidget, this);
         addTransportation->show();
 
 }
@@ -82,8 +82,6 @@ void Home::on_Update_btn_clicked()
 
 void Home::on_pushButton_clicked()
 {
-
-
 
         // Check if the graph is complete
         if (graph->isCompleteGraph()) {

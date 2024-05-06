@@ -33,6 +33,7 @@ public:
     void setGraph(Graph* graph);
     void drawNode(const Node& node);
     void drawEdge(const Node& node);
+    void reDraw();
     void mousePressEvent(QMouseEvent *event) override;
     void drawArrowToPoint(const QPointF& targetPos);
     void animateDFS();

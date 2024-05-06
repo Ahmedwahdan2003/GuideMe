@@ -4,7 +4,7 @@
 #include <QDialog>
 #include<graph.h>
 #include<home.h>
-
+#include<visualizegraph.h>
 namespace Ui {
 class addT;
 }
@@ -16,7 +16,7 @@ class addT : public QDialog
 
 public:
 
-     explicit addT(Graph *graph, QWidget *parent = nullptr);
+     explicit addT(Graph *graph, visualizeGraph *graphWid, QWidget *parent = nullptr);
     ~addT();
    // bool readFromFile(const QString& fileName, QStringList& data);
     Node qStringToNode(const QString& qstr);
@@ -26,8 +26,8 @@ private slots:
 
 private:
     Ui::addT *ui;
-     Graph *graph;
-
+    Graph *graph;
+    visualizeGraph *graphWid;
 };
 
 #endif // ADDT_H

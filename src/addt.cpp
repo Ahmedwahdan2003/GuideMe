@@ -6,12 +6,14 @@
 #include <QStringList>
 #include <QLineEdit>
 #include <QDebug>
+#include <home.h>
 #include<QMessageBox>
 
-addT::addT(Graph *graph, QWidget *parent)
+addT::addT(Graph *graph, visualizeGraph *graphWid , QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::addT)
     , graph(graph)
+    , graphWid(graphWid)
 {
     ui->setupUi(this);
 }
@@ -20,7 +22,6 @@ addT::~addT()
 {
     delete ui;
 }
-
 void addT::on_pushButton_clicked()
 {
     if (graph) {
@@ -48,10 +49,12 @@ void addT::on_pushButton_clicked()
             Transportation transportation(transA, transportationInt);
 
             graph->addEdge(sourceA, destA, transportation);
-
-
         close();
+        graphWid->reDraw();
+
+
     } else {
         qDebug() << "Error: Graph object is nullptr.";
+
     }
 }
