@@ -12,7 +12,9 @@ CONFIG += c++17
 
 SOURCES += \
     addt.cpp \
+    bfswidget.cpp \
     deletet.cpp \
+    dfswidget.cpp \
     graph.cpp \
     home.cpp \
     main.cpp \
@@ -21,7 +23,9 @@ SOURCES += \
 
 HEADERS += \
     addt.h \
+    bfswidget.h \
     deletet.h \
+    dfswidget.h \
     graph.h \
     home.h \
     updatet.h \
@@ -29,7 +33,9 @@ HEADERS += \
 
 FORMS += \
     addt.ui \
+    bfswidget.ui \
     deletet.ui \
+    dfswidget.ui \
     home.ui \
     updatet.ui
 
