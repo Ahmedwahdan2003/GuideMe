@@ -157,7 +157,7 @@ const std::vector<Edge>& getEdgesRef() const;
  void writeGraphToFile(const QString& fileName);
  bool hasEdge(const Node& source, const Node& destination)const;
  std::vector<Node> DFS(Node& StartNode);
- std::vector<Node> BFS(Node& StartNode);
+ std::vector<Node> BFS(Node& startNode);
  static Graph& getInstance() {
      // Static local variable to ensure it's initialized only once
      static Graph instance;

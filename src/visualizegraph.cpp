@@ -26,13 +26,13 @@ void visualizeGraph::setGraph(Graph* graph)   //{WAHDAN}==> Dependency injection
     this->graph = graph;
     if (!graph)
         return;
-    dfspath = graph->DFS(graph->getNodes()[0]);
-    bfspath = graph->BFS(graph->getNodes()[0]);
+    // dfspath = graph->DFS(graph->getNodes()[0]);
+    // bfspath = graph->BFS(graph->getNodes()[0]);
     // Clear the scene
     scene()->clear();
     NodesLeft = graph->getNodes().size();
     NodesDrawnidx=0;
-    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map"); // Adjust the path to your background image
+    QPixmap backgroundImage("E:\\Year Two\\Semester 4\\Data Structures\\GuideMe\\src\\map.jpg"); // Adjust the path to your background image
 
     // Scale the background image to fit the size of the widget
     QPixmap scaledBackgroundImage = backgroundImage.scaled(1100,1150, Qt::KeepAspectRatio);
@@ -52,11 +52,16 @@ void visualizeGraph::setGraph(Graph* graph)   //{WAHDAN}==> Dependency injection
     // Create a pixmap item and set the background image
 
 }
+void visualizeGraph::setBFSPath(const std::vector<Node>& path)
+{
+    bfspath = path;
+    qDebug()<<"hello kitty";
+}
 
 void visualizeGraph::drawNode(const Node& node)
 {
     // Load a custom pin pixmap
-    QPixmap pinPixmap("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\google-maps"); // Adjust the path to your pin image
+    QPixmap pinPixmap("E:\\Year Two\\Semester 4\\Data Structures\\GuideMe\\src\\google-maps.png"); // Adjust the path to your pin image
 
     // Scale the pin pixmap to desired size
     int pinSize = 32; // Adjust the size as needed
@@ -309,8 +314,14 @@ void visualizeGraph::animateDFS()
 }
 void visualizeGraph::startBFSAnimation(){
     try{
-        algosindex =0;
-        animationTimertwo.start(500);
+        // Clear any existing path and prepare for BFS animation
+        NodesDrawnidx = 0;
+        algosindex = 0;
+        flag = true;
+
+
+        // Start animation
+        animationTimertwo.start(1000); // Adjust interval as needed
     }
     catch (const std::exception& e) {
         qDebug() << "Exception caught in drawArrowToPoint: " << e.what();
@@ -378,8 +389,7 @@ void visualizeGraph::reDraw() {
         drawEdge(node);
     }
     edgesDrawn.clear();
-    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map"); // Adjust the path to your background image
-
+    QPixmap backgroundImage("E:\\Year Two\\Semester 4\\Data Structures\\GuideMe\\src\\map"); // Adjust the path to your background image
     // Scale the background image to fit the size of the widget
     //QPixmap scaledBackgroundImage = backgroundImage.scaled(viewport()->size(), Qt::KeepAspectRatio);
 

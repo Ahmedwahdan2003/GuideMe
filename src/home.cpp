@@ -4,8 +4,11 @@
 #include"addt.h"
 #include"updatet.h"
 #include"deletet.h"
+#include"bfswidget.h"
+#include"dfswidget.h"
 #include <QMessageBox>
 #include<qfile.h>
+
 
 
 Home::Home(QWidget *parent) : QMainWindow(parent), ui(new Ui::Home), graph(new Graph())
@@ -19,7 +22,7 @@ Home::Home(QWidget *parent) : QMainWindow(parent), ui(new Ui::Home), graph(new G
     }
 
     // Read graph data from file
-    if (!graph->readGraphFile("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\Graph.txt")) {
+    if (!graph->readGraphFile("E:\\Year Two\\Semester 4\\Data Structures\\GuideMe\\src\\Graph.txt")) {
         qDebug() << "Failed to read graph data from file";
         delete graph;
         return;
@@ -34,8 +37,7 @@ Home::Home(QWidget *parent) : QMainWindow(parent), ui(new Ui::Home), graph(new G
     graphWidget->setGraph(graph);
     ui->verticalLayout_2->addWidget(graphWidget);
 
-    QString imagePath = "C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map";
-
+    QString imagePath = "E:\\Year Two\\Semester 4\\Data Structures\\GuideMe\\src\\map";
         QPixmap backgroundImage(imagePath);
         if (!backgroundImage.isNull()) {
             QPalette palette;
@@ -53,7 +55,7 @@ Home::Home(QWidget *parent) : QMainWindow(parent), ui(new Ui::Home), graph(new G
 
 Home::~Home()
 {
-    graph->writeGraphToFile("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\Graph.txt");
+    graph->writeGraphToFile("E:\\Year Two\\Semester 4\\Data Structures\\GuideMe\\src\\Graph.txt");
     delete graph;
     delete ui;
 
@@ -61,7 +63,10 @@ Home::~Home()
 
 
 void Home::btn_1_handle(){
-    graphWidget->startDFSAnimation();
+    DFSWidget *form = new DFSWidget(graph,graphWidget,this);
+    form->show();
+
+    //graphWidget->startDFSAnimation();
 }
 
 void Home::btn_1_handle2(){
@@ -112,6 +117,8 @@ void Home::on_pushButton_clicked()
 
 void Home::on_BFS_btn_clicked()
 {
-      graphWidget->startBFSAnimation();
+    BFSwidget *form = new BFSwidget(graph,graphWidget,this);
+    form->show();
+    // graphWidget->startBFSAnimation();
 }
 

@@ -383,7 +383,6 @@ void Graph::writeGraphToFile(const QString& fileName) {
             }
         }
     }
-
     file.close();
 }
 

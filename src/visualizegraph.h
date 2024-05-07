@@ -39,6 +39,8 @@ public:
     void drawArrowToPoint(const QPointF& targetPos);
     void animateDFS();
     void animateBFS();
+    void setBFSPath(const std::vector<Node>& path);
+
 
     // Index of the next node to draw
 signals:
