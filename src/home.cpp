@@ -22,7 +22,7 @@ Home::Home(QWidget *parent) : QMainWindow(parent), ui(new Ui::Home), graph(new G
     }
 
     // Read graph data from file
-    if (!graph->readGraphFile("E:\\Year Two\\Semester 4\\Data Structures\\GuideMe\\src\\Graph.txt")) {
+    if (!graph->readGraphFile("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\Graph.txt")) {
         qDebug() << "Failed to read graph data from file";
         delete graph;
         return;
@@ -37,7 +37,7 @@ Home::Home(QWidget *parent) : QMainWindow(parent), ui(new Ui::Home), graph(new G
     graphWidget->setGraph(graph);
     ui->verticalLayout_2->addWidget(graphWidget);
 
-    QString imagePath = "E:\\Year Two\\Semester 4\\Data Structures\\GuideMe\\src\\map";
+    QString imagePath = "C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map";
         QPixmap backgroundImage(imagePath);
         if (!backgroundImage.isNull()) {
             QPalette palette;
@@ -55,7 +55,7 @@ Home::Home(QWidget *parent) : QMainWindow(parent), ui(new Ui::Home), graph(new G
 
 Home::~Home()
 {
-    graph->writeGraphToFile("E:\\Year Two\\Semester 4\\Data Structures\\GuideMe\\src\\Graph.txt");
+    graph->writeGraphToFile("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\Graph.txt");
     delete graph;
     delete ui;
 

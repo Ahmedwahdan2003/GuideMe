@@ -2,7 +2,7 @@
 #include "ui_dfswidget.h"
 #include "visualizegraph.h"
 #include "graph.h"
-
+#include <QMessageBox>
 // {Omar Khales AKA (TWIX) :)}
 DFSWidget::DFSWidget(Graph *graph, visualizeGraph *graphWid, QWidget *parent)
     : QDialog(parent)
@@ -29,7 +29,7 @@ void DFSWidget::on_pushButton_clicked() // {Omar Khales AKA (TWIX) made this}
     QString sourceNode = ui->lineEdit->text();
     qDebug() << sourceNode;
     // Search for the node the user entered
-    for(int i = 0; i < graph->getNodes().size(); i++)
+    for(size_t i = 0; i < graph->getNodes().size(); i++)
     {
         if(graph->getNodes()[i].getNodeName() == sourceNode)
         {
@@ -48,6 +48,6 @@ void DFSWidget::on_pushButton_clicked() // {Omar Khales AKA (TWIX) made this}
     }
     else
     {
-        qDebug() << "Start node not found!";
+        QMessageBox::critical(this, "Error", "Please Enter Start Node . ");
     }
 }

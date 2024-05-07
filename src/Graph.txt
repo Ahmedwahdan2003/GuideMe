@@ -5,5 +5,4 @@ Cairo Giza 0 0 0 0 Bus 50 Metro 60 taxi 30 toktok 20
 Cairo ismaelya 0 0 0 0 Bus 50 Metro 60 taxi 30 
 Cairo matroh 0 0 0 0 Bus 50 Metro 60 taxi 30 
 Giza matroh 0 0 0 0 Metro 60 taxi 30 toktok 10 
-Giza ismaelya 0 0 0 0 toktok 30 
 ismaelya matroh 0 0 0 0 toktok 20 

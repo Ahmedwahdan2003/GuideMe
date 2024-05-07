@@ -32,13 +32,13 @@ void visualizeGraph::setGraph(Graph* graph)   //{WAHDAN}==> Dependency injection
     scene()->clear();
     NodesLeft = graph->getNodes().size();
     NodesDrawnidx=0;
-    QPixmap backgroundImage("E:\\Year Two\\Semester 4\\Data Structures\\GuideMe\\src\\map.jpg"); // Adjust the path to your background image
+    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map"); // Adjust the path to your background image
 
     // Scale the background image to fit the size of the widget
-    QPixmap scaledBackgroundImage = backgroundImage.scaled(1100,1150, Qt::KeepAspectRatio);
+    // QPixmap scaledBackgroundImage = backgroundImage.scaled(1100,1150, Qt::KeepAspectRatio);
 
     // Create a graphics item for the background
-    QGraphicsPixmapItem* backgroundItem = scene()->addPixmap(scaledBackgroundImage);
+    QGraphicsPixmapItem* backgroundItem = scene()->addPixmap(backgroundImage);
 
     // Set the position of the background item to cover the whole scene
     backgroundItem->setPos(0, 0);
@@ -61,7 +61,7 @@ void visualizeGraph::setBFSPath(const std::vector<Node>& path)
 void visualizeGraph::drawNode(const Node& node)
 {
     // Load a custom pin pixmap
-    QPixmap pinPixmap("E:\\Year Two\\Semester 4\\Data Structures\\GuideMe\\src\\google-maps.png"); // Adjust the path to your pin image
+    QPixmap pinPixmap("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\google-maps.png"); // Adjust the path to your pin image
 
     // Scale the pin pixmap to desired size
     int pinSize = 32; // Adjust the size as needed
@@ -88,64 +88,50 @@ void visualizeGraph::drawNode(const Node& node)
 
 void visualizeGraph::drawEdge(const Node& node)
 {
-    // Get all edges connected to the node
-
     QPointF nodePos = nodesPostitions[node.nodeName];
     std::vector<Edge> edges = graph->getEdges(node);
 
-    // Draw each edge with a slight offset
-    qreal angleIncrement = (2 * M_PI) / edges.size();
-    qreal startAngle = -M_PI / 2;
-    qreal t = 0.1;
-    int counter = 1;
-    qreal spacing = 10;
-    float edgeoffset = 1;
-    for (const auto& edge : edges) {
+    for (size_t i = 0; i < edges.size(); ++i) {
+        const Edge& edge = edges[i];
         std::tuple<QString, QString, QString> edgeTuple(edge.parent.nodeName, edge.destination.nodeName, edge.option.getName());
-        std::tuple<QString, QString, QString> edgeTuple2(edge.destination.nodeName, edge.parent.nodeName, edge.option.getName());            // Include transportation name
-        if (edgesDrawn.find(edgeTuple) != edgesDrawn.end()) {
+        std::tuple<QString, QString, QString> edgeTuple2(edge.destination.nodeName, edge.parent.nodeName, edge.option.getName()); // Include transportation name // Include transportation name
+        // Check if the edge has already been drawn between the two nodes
+        if (edgesDrawn.find(edgeTuple) != edgesDrawn.end() || edgesDrawn.find(edgeTuple2) != edgesDrawn.end()) {
             continue; // Skip drawing this edge
         }
-        edgesDrawn.insert(edgeTuple);
-        if (edgesDrawn.find(edgeTuple2) != edgesDrawn.end()) {
-            continue; // Skip drawing this edge
-        }
-        edgesDrawn.insert(edgeTuple2);
-        edgeoffset+=1;
-        // Calculate the angle between the two nodes
-        qreal angle = startAngle;
-        startAngle += angleIncrement;
 
-        // Calculate the start and end positions for the line
-        QPointF startPos = nodePos + QPointF(node.radius * qCos(angle), node.radius * qSin(angle));
-        QPointF endPos = nodesPostitions[edge.destination.nodeName] + QPointF(node.radius * qCos(angle), node.radius * qSin(angle)); // Adjust end position to node perimeter
+        // Calculate midpoint between nodes
+        QPointF midPoint = (nodePos + nodesPostitions[edge.destination.nodeName]) / 2;
 
-        // Draw straight line
+        // Offset the drawing position based on the index of the edge
+        qreal offset = i * 30; // Adjust the offset as needed
+
+        // Calculate control points for cubic Bezier curve
+        QPointF controlPoint1(nodePos.x(), nodePos.y() + offset);
+        QPointF controlPoint2(midPoint.x(), midPoint.y() + offset);
+
+        // Draw curved line using cubic Bezier curve
+        QPainterPath path;
+        path.moveTo(nodePos);
+        path.cubicTo(controlPoint1, controlPoint2, midPoint);
+        path.lineTo(nodesPostitions[edge.destination.nodeName]); // Draw a straight line to the destination node
+
+        // Draw the edge
         QPen pen(Qt::black);
         pen.setWidth(2);
-        QGraphicsLineItem* lineItem = scene()->addLine(startPos.x(), startPos.y()+edgeoffset, endPos.x(), endPos.y(),pen);
-
-        // Add the path to the scene
+        QGraphicsPathItem* pathItem = scene()->addPath(path, pen);
         QString tooltipText = QString::number(edge.option.getCost());
-        lineItem->setToolTip(tooltipText);
+        pathItem->setToolTip(tooltipText);
 
-        // Calculate position for text along the line
-        if (counter % 3 == 0)
-        {
-            t += 0.2;
-            edgeoffset=1;
-        }
-        QPointF textPos = startPos * (1 - t) + endPos * t;
-
-        // Set edge transportation name on the line
-        QGraphicsSimpleTextItem* textItem = scene()->addSimpleText(edge.option.getName());
-        qreal nameOffsetX = spacing * qSin(angle); // Adjust this value for desired spacing
-        qreal nameOffsetY = spacing * qCos(angle); // Adjust this value for desired spacing
-        textItem->setPos(textPos.x() + nameOffsetX, textPos.y() + nameOffsetY);
-        counter++;
+        // Add the edge to the set of drawn edges
+        edgesDrawn.insert(edgeTuple);
+        edgesDrawn.insert(edgeTuple2);
     }
-    // edgesDrawn.clear();
 }
+
+
+
+
 
 
 void visualizeGraph::mousePressEvent(QMouseEvent *event)
@@ -389,7 +375,7 @@ void visualizeGraph::reDraw() {
         drawEdge(node);
     }
     edgesDrawn.clear();
-    QPixmap backgroundImage("E:\\Year Two\\Semester 4\\Data Structures\\GuideMe\\src\\map"); // Adjust the path to your background image
+    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map"); // Adjust the path to your background image
     // Scale the background image to fit the size of the widget
     //QPixmap scaledBackgroundImage = backgroundImage.scaled(viewport()->size(), Qt::KeepAspectRatio);
 
