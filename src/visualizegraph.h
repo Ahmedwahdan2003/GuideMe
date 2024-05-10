@@ -19,6 +19,9 @@ public:
     static unsigned int NodesLeft;
     static unsigned int NodesDrawnidx;
     static size_t algosindex;
+    static bool isDragAllowed;
+    static QString draggedNode;
+    static QPointF dragOffset;
     static std::vector<Node>dfspath;
     static std::vector<Node>bfspath;
     QTimer animationTimer;
@@ -36,6 +39,8 @@ public:
     void drawEdge(const Node& node);
     void reDraw();
     void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
     void drawArrowToPoint(const QPointF& targetPos);
     void animateDFS();
     void animateBFS();

@@ -4,6 +4,7 @@
 #include <QGraphicsLineItem>
 #include <QMouseEvent>
 #include<QApplication>
+#include<QRandomGenerator>
 unsigned int visualizeGraph::NodesLeft = 0; // Initialize static member
 unsigned int visualizeGraph::NodesDrawnidx = 0; // Initialize static member
 bool visualizeGraph::flag = false;
@@ -12,6 +13,9 @@ std::unordered_set<std::tuple<QString, QString, QString>,TupleHash> visualizeGra
 size_t visualizeGraph::algosindex = 0;
 std::vector<Node>visualizeGraph::dfspath = std::vector<Node>();
 std::vector<Node>visualizeGraph::bfspath = std::vector<Node>();
+bool visualizeGraph::isDragAllowed;
+QString visualizeGraph::draggedNode;
+QPointF visualizeGraph::dragOffset;
 visualizeGraph::visualizeGraph(QWidget *parent) : QGraphicsView(parent),animationTimer(this), graph(nullptr)
 {
     setScene(new QGraphicsScene(this));
@@ -19,6 +23,7 @@ visualizeGraph::visualizeGraph(QWidget *parent) : QGraphicsView(parent),animatio
     connect(&animationTimertwo, &QTimer::timeout, this, &visualizeGraph::animateBFS);
     lineItem=nullptr;
     arrowheadItem=nullptr;
+    isDragAllowed=false;
 }
 
 void visualizeGraph::setGraph(Graph* graph)   //{WAHDAN}==> Dependency injection
@@ -55,7 +60,6 @@ void visualizeGraph::setGraph(Graph* graph)   //{WAHDAN}==> Dependency injection
 void visualizeGraph::setBFSPath(const std::vector<Node>& path)
 {
     bfspath = path;
-    qDebug()<<"hello kitty";
 }
 
 void visualizeGraph::drawNode(const Node& node)
@@ -91,43 +95,69 @@ void visualizeGraph::drawEdge(const Node& node)
     QPointF nodePos = nodesPostitions[node.nodeName];
     std::vector<Edge> edges = graph->getEdges(node);
 
-    for (size_t i = 0; i < edges.size(); ++i) {
-        const Edge& edge = edges[i];
-        std::tuple<QString, QString, QString> edgeTuple(edge.parent.nodeName, edge.destination.nodeName, edge.option.getName());
-        std::tuple<QString, QString, QString> edgeTuple2(edge.destination.nodeName, edge.parent.nodeName, edge.option.getName()); // Include transportation name // Include transportation name
+    // Map to store colors for each transportation
+    std::unordered_map<QString, QColor> colorMap;
+
+    // Iterate over edges to draw only one edge between the same two nodes
+    for (const Edge& edge : edges) {
         // Check if the edge has already been drawn between the two nodes
+        std::tuple<QString, QString, QString> edgeTuple(edge.parent.nodeName, edge.destination.nodeName, edge.option.getName());
+        std::tuple<QString, QString, QString> edgeTuple2(edge.destination.nodeName, edge.parent.nodeName, edge.option.getName());
         if (edgesDrawn.find(edgeTuple) != edgesDrawn.end() || edgesDrawn.find(edgeTuple2) != edgesDrawn.end()) {
             continue; // Skip drawing this edge
         }
-
-        // Calculate midpoint between nodes
-        QPointF midPoint = (nodePos + nodesPostitions[edge.destination.nodeName]) / 2;
-
-        // Offset the drawing position based on the index of the edge
-        qreal offset = i * 30; // Adjust the offset as needed
-
-        // Calculate control points for cubic Bezier curve
-        QPointF controlPoint1(nodePos.x(), nodePos.y() + offset);
-        QPointF controlPoint2(midPoint.x(), midPoint.y() + offset);
-
-        // Draw curved line using cubic Bezier curve
-        QPainterPath path;
-        path.moveTo(nodePos);
-        path.cubicTo(controlPoint1, controlPoint2, midPoint);
-        path.lineTo(nodesPostitions[edge.destination.nodeName]); // Draw a straight line to the destination node
-
-        // Draw the edge
-        QPen pen(Qt::black);
-        pen.setWidth(2);
-        QGraphicsPathItem* pathItem = scene()->addPath(path, pen);
-        QString tooltipText = QString::number(edge.option.getCost());
-        pathItem->setToolTip(tooltipText);
-
-        // Add the edge to the set of drawn edges
         edgesDrawn.insert(edgeTuple);
         edgesDrawn.insert(edgeTuple2);
+
+        // Calculate destination node position
+        QPointF destPos = nodesPostitions[edge.destination.nodeName];
+
+        // Calculate midpoint of the edge for label placement
+        QPointF midPoint = (nodePos + destPos) / 2.0;
+
+        // Concatenate transportation names and costs into a single string
+        QString labelText;
+        for (const Edge& e : edges) {
+            if (e.parent == edge.parent && e.destination == edge.destination) {
+                if (!labelText.isEmpty()) {
+                    labelText += ", ";
+                }
+                labelText += QString("%1 ($%2) ").arg(e.option.getName()).arg(e.option.getCost());
+
+                // Assign color for each transportation if not already assigned
+                if (colorMap.find(e.option.getName()) == colorMap.end()) {
+                    // Generate a random color for the transportation
+                    QColor color = QColor::fromRgb(QRandomGenerator::global()->bounded(256),
+                                                   QRandomGenerator::global()->bounded(256),
+                                                   QRandomGenerator::global()->bounded(256));
+                    colorMap[e.option.getName()] = color;
+                }
+            }
+        }
+
+        // Draw the edge and label with respective colors
+        for (const Edge& e : edges) {
+            if (e.parent == edge.parent && e.destination == edge.destination) {
+                QPen pen(colorMap[e.option.getName()]); // Set color based on transportation
+                pen.setWidth(4);
+                scene()->addLine(nodePos.x(), nodePos.y(), destPos.x(), destPos.y(), pen);
+                QGraphicsSimpleTextItem* textItem = scene()->addSimpleText(labelText);
+                textItem->setPos(midPoint);
+                QFont font = textItem->font();
+                font.setPointSize(11); // Set the desired font size
+                textItem->setFont(font);
+
+
+                break; // Break after drawing the edge with colors to avoid duplication
+            }
+        }
     }
 }
+
+
+
+
+
 
 
 
@@ -137,7 +167,7 @@ void visualizeGraph::drawEdge(const Node& node)
 void visualizeGraph::mousePressEvent(QMouseEvent *event)
 {
     QGraphicsView::mousePressEvent(event);
-
+    if(isDragAllowed==false){
     std::vector<Node> nodes = graph->getNodes(); // Get nodes by reference
     std::vector<Edge> edges = graph->getEdges(); // Get edges by const reference
 
@@ -166,11 +196,62 @@ void visualizeGraph::mousePressEvent(QMouseEvent *event)
         for (const auto& node : nodes) {
             drawEdge(node);
         }
+        isDragAllowed=true;
         edgesDrawn.clear();
+    }
+    }else{
+        QPointF clickPos = mapToScene(event->pos());
+        for (const auto& node : nodesPostitions) {
+            // Calculate distance between click position and node position
+            qreal dx = clickPos.x() - node.second.x();
+            qreal dy = clickPos.y() - node.second.y();
+            qreal distanceSquared = dx * dx + dy * dy;
+            qreal radiusSquared = 50;
+
+            // Check if the click is within the radius of the node
+            if (distanceSquared <= radiusSquared) {
+                // Store the clicked node and its offset from the click position
+                draggedNode = node.first;
+                dragOffset = QPointF(dx, dy);
+                break;
+            }
+        }
+
     }
 }
 
+void visualizeGraph::mouseMoveEvent(QMouseEvent *event)
+{
+    QGraphicsView::mouseMoveEvent(event);
 
+    // Check if a node is currently being dragged
+    if (!draggedNode.isEmpty()) {
+        // Calculate the new position of the dragged node
+        QPointF newPos = mapToScene(event->pos()) - dragOffset;
+
+        // Update the position of the dragged node in the scene
+
+
+        // Update the position of the dragged node in the nodesPositions map
+        QString nodeName = draggedNode;
+        nodesPostitions[nodeName] = newPos;
+
+        // Redraw the scene
+        reDraw();
+    }
+}
+
+void visualizeGraph::mouseReleaseEvent(QMouseEvent *event)
+{
+    QGraphicsView::mouseReleaseEvent(event);
+
+    // Check if a node is currently being dragged
+    if (!draggedNode.isEmpty()) {
+        // Reset the draggedNode and dragOffset variables
+        draggedNode = nullptr;
+        dragOffset = QPointF();
+    }
+}
 void visualizeGraph::updateNodeCounter()
 {
 

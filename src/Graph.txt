@@ -1,8 +1,10 @@
 Alex Cairo 0 0 0 0 Bus 50 Metro 60 taxi 30 
 Alex Giza 0 0 0 0 Bus 50 Metro 60 taxi 30 
-Alex ismaelya 0 0 0 0 toktok 20 
-Cairo Giza 0 0 0 0 Bus 50 Metro 60 taxi 30 toktok 20 
+Alex matroh 0 0 0 0 toktok 20 uber 30 
+Alex sharm 0 0 0 0 toktok 30 
+Cairo Giza 0 0 0 0 Bus 50 Metro 60 taxi 30 
 Cairo ismaelya 0 0 0 0 Bus 50 Metro 60 taxi 30 
 Cairo matroh 0 0 0 0 Bus 50 Metro 60 taxi 30 
-Giza matroh 0 0 0 0 Metro 60 taxi 30 toktok 10 
-ismaelya matroh 0 0 0 0 toktok 20 
+Cairo sharm 0 0 0 0 toktok 50 
+Giza matroh 0 0 0 0 Bus 50 Metro 60 taxi 30 
+ismaelya matroh 0 0 0 0 toktok 20 uber 20 

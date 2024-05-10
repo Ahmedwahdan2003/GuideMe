@@ -36,10 +36,10 @@ void addT::on_pushButton_clicked()
         }
 
         // Check if both source and destination nodes are valid in the graph
-        if (!graph->isValidNode(sourceA) || !graph->isValidNode(destA)) {
-            QMessageBox::critical(this, "Error", "Invalid source or destination node.");
-            return;
-        }
+        // if (!graph->isValidNode(sourceA) || !graph->isValidNode(destA)) {
+        //     QMessageBox::critical(this, "Error", "Invalid source or destination node.");
+        //     return;
+        // }
         if (sourceA == destA) {
             QMessageBox::critical(this, "Error", "Same source and destination.");
             return;
