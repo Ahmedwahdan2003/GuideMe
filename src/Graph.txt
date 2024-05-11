@@ -1,12 +1,15 @@
-Alex Cairo 0 0 0 0 Bus 50 Metro 60 taxi 30 
-Alex Giza 0 0 0 0 Bus 50 Metro 60 taxi 30 
-Alex matroh 0 0 0 0 toktok 20 uber 30 
-Alex sharm 0 0 0 0 toktok 30 
-Alex ismaelya 0 0 0 0 toktok 20 
-Cairo Giza 0 0 0 0 Bus 50 Metro 60 taxi 30 
-Cairo ismaelya 0 0 0 0 Bus 50 Metro 60 taxi 30 
-Cairo matroh 0 0 0 0 Bus 50 Metro 60 taxi 30 
-Cairo sharm 0 0 0 0 toktok 50 
-Giza matroh 0 0 0 0 Bus 50 Metro 60 taxi 30 
-Giza ismaelya 0 0 0 0 toktko 30 
-ismaelya matroh 0 0 0 0 toktok 20 uber 20 
+earth mercury 0 0 0 0 Bus 50 Metro 60 taxi 30 
+earth mars 0 0 0 0 Bus 50 Metro 60 taxi 30 
+earth saturn 0 0 0 0 toktok 20 
+earth uranus 0 0 0 0 toktok 20 
+earth jubiter 0 0 0 0 toktok 30 
+jubiter mercury 0 0 0 0 Bus 50 Metro 60 taxi 30 toktok 10 
+jubiter mars 0 0 0 0 Bus 50 Metro 60 taxi 30 
+jubiter saturn 0 0 0 0 toktok 20 uber 20 
+jubiter uranus 0 0 0 0 toktok 23032 
+mars mercury 0 0 0 0 Bus 50 Metro 60 taxi 30 
+mars saturn 0 0 0 0 toktko 30 
+mars uranus 0 0 0 0 toktok 29 toktok 40 
+mercury saturn 0 0 0 0 Bus 50 Metro 60 taxi 30 
+mercury uranus 0 0 0 0 toktok 50 
+saturn uranus 0 0 0 0 toktok 231 

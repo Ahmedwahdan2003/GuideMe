@@ -4,6 +4,7 @@
 #include <QGraphicsLineItem>
 #include <QMouseEvent>
 #include<QApplication>
+#include<QScrollBar>
 #include<QRandomGenerator>
 unsigned int visualizeGraph::NodesLeft = 0; // Initialize static member
 unsigned int visualizeGraph::NodesDrawnidx = 0; // Initialize static member
@@ -21,9 +22,10 @@ visualizeGraph::visualizeGraph(QWidget *parent) : QGraphicsView(parent),animatio
     setScene(new QGraphicsScene(this));
     connect(&animationTimer, &QTimer::timeout, this, &visualizeGraph::animateDFS);
     connect(&animationTimertwo, &QTimer::timeout, this, &visualizeGraph::animateBFS);
-    lineItem=nullptr;
-    arrowheadItem=nullptr;
+    directedArrowItem=nullptr;
     isDragAllowed=false;
+    nodeimg = QPixmap("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\earth2").scaled(128,128, Qt::KeepAspectRatio);
+    backgroundImage = QPixmap("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\space_back2");
 }
 
 void visualizeGraph::setGraph(Graph* graph)   //{WAHDAN}==> Dependency injection
@@ -34,7 +36,6 @@ void visualizeGraph::setGraph(Graph* graph)   //{WAHDAN}==> Dependency injection
     scene()->clear();
     NodesLeft = graph->getNodes().size();
     NodesDrawnidx=0;
-    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map8");
 
     QGraphicsPixmapItem* backgroundItem = scene()->addPixmap(backgroundImage);
 
@@ -55,18 +56,18 @@ void visualizeGraph::setBFSPath(const std::vector<Node>& path)
     bfspath = path;
 }
 
-void visualizeGraph::drawNode(const Node& node)
+void visualizeGraph::drawNode(const Node& node,int choice)
 {
-    // Load a custom pin pixmap
-    QPixmap pinPixmap("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\google-maps.png"); // Adjust the path to your pin image
+    // Load a custom pin pixmap // Adjust the path to your pin image
 
     // Scale the pin pixmap to desired size
-    int pinSize = 32; // Adjust the size as needed
-    QPixmap scaledPinPixmap = pinPixmap.scaled(pinSize, pinSize, Qt::KeepAspectRatio);
 
     // Create a graphics item for the pin
-    QGraphicsPixmapItem* pinItem = scene()->addPixmap(scaledPinPixmap);
-    pinItem->setOffset(-scaledPinPixmap.width() / 2, -scaledPinPixmap.height()); // Adjust position to center the pin
+        QGraphicsPixmapItem* pinItem;
+        pinItem = scene()->addPixmap(nodeimg);
+
+
+    pinItem->setOffset(-nodeimg.width() / 2, -nodeimg.height()); // Adjust position to center the pin
     pinItem->setPos(nodesPostitions[node.nodeName]);
 
     // Set the node name as the tooltip
@@ -77,7 +78,7 @@ void visualizeGraph::drawNode(const Node& node)
     nodeNameItem->setDefaultTextColor(Qt::white); // Adjust text color
     nodeNameItem->setFont(QFont("Arial", 11)); // Adjust font properties
     nodeNameItem->setPos(nodesPostitions[node.nodeName].x() - nodeNameItem->boundingRect().width() / 2,
-                         nodesPostitions[node.nodeName].y() - scaledPinPixmap.height() - 20); // Adjust position
+                         nodesPostitions[node.nodeName].y() - nodeimg.height() - 20); // Adjust position
     nodeNameItem->setZValue(1); // Ensure text appears above the pin
 }
 
@@ -135,7 +136,7 @@ void visualizeGraph::drawEdge(const Node& node)
                 pen.setWidth(4);
                 scene()->addLine(nodePos.x(), nodePos.y(), destPos.x(), destPos.y(), pen);
                 QGraphicsTextItem* textItem = scene()->addText(labelText);
-                textItem->setDefaultTextColor(Qt::white);
+                textItem->setDefaultTextColor(colorMap[e.option.getName()]);
                 textItem->setPos(midPoint);
                 QFont font = textItem->font();
                 font.setPointSize(11); // Set the desired font size
@@ -164,7 +165,7 @@ void visualizeGraph::mousePressEvent(QMouseEvent *event)
         newNode.centerX = clickPos.x();
         newNode.centerY = clickPos.y();
         nodesPostitions[newNode.nodeName] = clickPos;
-        drawNode(newNode);
+        drawNode(newNode,1);
         qDebug() << "NodesDrawnidx : " << NodesDrawnidx << "\n";
 
 
@@ -189,7 +190,7 @@ void visualizeGraph::mousePressEvent(QMouseEvent *event)
             qreal dx = clickPos.x() - node.second.x();
             qreal dy = clickPos.y() - node.second.y();
             qreal distanceSquared = dx * dx + dy * dy;
-            qreal radiusSquared = 50;
+            qreal radiusSquared = 100;
 
             // Check if the click is within the radius of the node
             if (distanceSquared <= radiusSquared) {
@@ -242,6 +243,16 @@ void visualizeGraph::updateNodeCounter()
 void visualizeGraph::drawArrowToPoint(const QPointF& targetPos)
 {
     try {
+        // Load the image for the directed arrow
+        QPixmap directedArrowPixmap("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\space_ship2"); // Adjust the path to your directed arrow image
+        int pinSize = 50; // Adjust the size as needed
+        QPixmap scaleddirectedArrowPixmap = directedArrowPixmap.scaled(pinSize, pinSize, Qt::KeepAspectRatio);
+        // Create a QGraphicsPixmapItem for the directed arrow image
+        directedArrowItem = scene()->addPixmap(scaleddirectedArrowPixmap);
+
+        // Set the position of the directed arrow item to the target position
+        directedArrowItem->setPos(targetPos+ QPointF(30, -80));
+
         // Get the center position of the target node
         QPointF nodeCenterPos = targetPos;
 
@@ -251,46 +262,15 @@ void visualizeGraph::drawArrowToPoint(const QPointF& targetPos)
         // Calculate the vector from the center position to the target position
         QPointF vectorToTarget = nodeCenterPos - centerPos;
 
-        // Calculate the length of the vector
-        qreal vectorLength = sqrt(vectorToTarget.x() * vectorToTarget.x() + vectorToTarget.y() * vectorToTarget.y());
+        // Calculate the angle of the directed arrow
+        qreal angle = atan2(vectorToTarget.y(), vectorToTarget.x()) * 180 / M_PI;
 
-        // Check if the vector length is zero to avoid division by zero
-        if (vectorLength != 0) {
-            // Calculate the normalized vector (unit vector) pointing towards the target
-            QPointF normalizedVector(vectorToTarget.x() / vectorLength, vectorToTarget.y() / vectorLength);
-
-            // Calculate the end position of the arrow (tip at the perimeter of the node)
-            qreal nodeRadius = 30;
-            qreal endX = nodeCenterPos.x() - normalizedVector.x() * nodeRadius;
-            qreal endY = nodeCenterPos.y() - normalizedVector.y() * nodeRadius;
-
-            // Calculate the angle of the arrow
-            qreal angle = atan2(nodeCenterPos.y() - endY, nodeCenterPos.x() - endX) * 180 / M_PI;
-
-            // Create a polygon representing the arrowhead
-            QPolygonF arrowhead;
-            arrowhead << QPointF(0, 0) << QPointF(-10, 5) << QPointF(-10, -5);
-
-            // Rotate the arrowhead polygon to match the angle of the arrow
-            QTransform transform;
-            transform.rotate(angle);
-            arrowhead = transform.map(arrowhead);
-
-            // Draw the arrowhead
-            arrowheadItem = scene()->addPolygon(arrowhead);
-            arrowheadItem->setBrush(Qt::white);
-            arrowheadItem->setPos(endX, endY);
-
-            // Draw the line segment from the center to the arrowhead
-            lineItem = scene()->addLine(centerPos.x(), centerPos.y(), endX, endY);
-            lineItem->setPen(QPen(Qt::white, 5, Qt::SolidLine, Qt::RoundCap));
-        } else {
-            qDebug() << "Error: Vector length is zero in drawArrowToPoint";
-        }
+        // Set the rotation of the directed arrow item to match the angle
+        directedArrowItem->setRotation(angle-50);
     } catch (const std::exception& e) {
-        qDebug() << "Exception caught in drawArrowToPoint: " << e.what();
+        qDebug() << "Exception caught in drawDirectedImageToPoint: " << e.what();
     } catch (...) {
-        qDebug() << "Unknown exception caught in drawArrowToPoint";
+        qDebug() << "Unknown exception caught in drawDirectedImageToPoint";
     }
 }
 
@@ -298,140 +278,139 @@ void visualizeGraph::drawArrowToPoint(const QPointF& targetPos)
 void visualizeGraph::startDFSAnimation()
 {
 
-    try{
-        qDebug()<<"hello from start dfs animation";
+    try {
+        // qDebug() << "Starting DFS animation";
+
         // Set the DFS path and reset index
         algosindex = 0;
-        qDebug()<<dfspath[0].nodeName;
-        qDebug()<<dfspath.size();
+
         // Start the animation timer
-        animationTimer.start(1000); // Adjust interval as needed
+        animationTimer.start(800); // Adjust interval as needed
+
+        // Draw the directed image for the first node
+        if (algosindex < dfspath.size()) {
+            const Node& currentNode = dfspath[algosindex];
+            QPointF nodePos = nodesPostitions[currentNode.nodeName];
+            drawArrowToPoint(nodePos);
+
+        }
     } catch (const std::exception& e) {
-        qDebug() << "Exception caught in drawArrowToPoint: " << e.what();
+        qDebug() << "Exception caught in startDFSAnimation: " << e.what();
     } catch (...) {
-        qDebug() << "Unknown exception caught in drawArrowToPoint";
+        qDebug() << "Unknown exception caught in startDFSAnimation";
     }
 }
 
 void visualizeGraph::animateDFS()
 {
-    try{
-        // qDebug()<<"hello from animateDfS";
+    try {
+        // qDebug() << "Animating DFS";
+
         // Check if there are nodes left to draw
         if (algosindex < dfspath.size()) {
             // Get the current node from the DFS path
             const Node& currentNode = dfspath[algosindex];
-            qDebug()<<algosindex<<"\n";
+
             // Calculate the position of the current node dynamically
             QPointF nodePos = nodesPostitions[currentNode.nodeName];
-            qDebug()<<currentNode.nodeName<<" "<<nodePos.toPoint()<<"\n";
-            // Remove the previously drawn arrow and line, if they exist
-            if (arrowheadItem != nullptr) {
-                scene()->removeItem(arrowheadItem);
-                delete arrowheadItem;
-                arrowheadItem = nullptr;
-            }
-            if (lineItem != nullptr) {
-                scene()->removeItem(lineItem);
-                delete lineItem;
-                lineItem = nullptr;
+
+            // Remove the previously drawn directed image, if it exists
+            if (directedArrowItem != nullptr) {
+                scene()->removeItem(directedArrowItem);
+                delete directedArrowItem;
+                directedArrowItem = nullptr;
             }
 
-            // Draw the arrow pointing at the current node
+            // Draw the directed image pointing at the current node
             drawArrowToPoint(nodePos);
-
             // Increment index for the next node
             ++algosindex;
         } else {
             // Animation finished, stop the timer
-            if (arrowheadItem!= nullptr) {
-                scene()->removeItem(arrowheadItem);
-                delete arrowheadItem;
-                arrowheadItem = nullptr;
-            }
-            if (lineItem!= nullptr) {
-                scene()->removeItem(lineItem);
-                delete lineItem;
-                lineItem = nullptr;
-            }
             animationTimer.stop();
+
+            // Remove the directed image from the scene
+            if (directedArrowItem != nullptr) {
+                scene()->removeItem(directedArrowItem);
+                delete directedArrowItem;
+                directedArrowItem = nullptr;
+            }
+
         }
     } catch (const std::exception& e) {
-        qDebug() << "Exception caught in drawArrowToPoint: " << e.what();
+        qDebug() << "Exception caught in animateDFS: " << e.what();
     } catch (...) {
-        qDebug() << "Unknown exception caught in drawArrowToPoint";
+        qDebug() << "Unknown exception caught in animateDFS";
     }
 }
 void visualizeGraph::startBFSAnimation(){
-    try{
-        // Clear any existing path and prepare for BFS animation
-        NodesDrawnidx = 0;
+    try {
+        // qDebug() << "Starting DFS animation";
+
+        // Set the DFS path and reset index
         algosindex = 0;
-        flag = true;
 
+        // Start the animation timer
+        animationTimertwo.start(800); // Adjust interval as needed
 
-        // Start animation
-        animationTimertwo.start(1000); // Adjust interval as needed
-    }
-    catch (const std::exception& e) {
-        qDebug() << "Exception caught in drawArrowToPoint: " << e.what();
+        // Draw the directed image for the first node
+        if (algosindex < bfspath.size()) {
+            const Node& currentNode = bfspath[algosindex];
+            QPointF nodePos = nodesPostitions[currentNode.nodeName];
+            drawArrowToPoint(nodePos);
+        }
+    } catch (const std::exception& e) {
+        qDebug() << "Exception caught in startDFSAnimation: " << e.what();
     } catch (...) {
-        qDebug() << "Unknown exception caught in drawArrowToPoint";
+        qDebug() << "Unknown exception caught in startDFSAnimation";
     }
 }
 void visualizeGraph::animateBFS(){
-    try{
-        // qDebug()<<"hello from animateDfS";
+    try {
+        // qDebug() << "Animating DFS";
+
         // Check if there are nodes left to draw
         if (algosindex < bfspath.size()) {
             // Get the current node from the DFS path
             const Node& currentNode = bfspath[algosindex];
-            qDebug()<<algosindex<<"\n";
+
             // Calculate the position of the current node dynamically
             QPointF nodePos = nodesPostitions[currentNode.nodeName];
-            qDebug()<<currentNode.nodeName<<" "<<nodePos.toPoint()<<"\n";
-            // Remove the previously drawn arrow and line, if they exist
-            if (arrowheadItem != nullptr) {
-                scene()->removeItem(arrowheadItem);
-                delete arrowheadItem;
-                arrowheadItem = nullptr;
-            }
-            if (lineItem != nullptr) {
-                scene()->removeItem(lineItem);
-                delete lineItem;
-                lineItem = nullptr;
+
+            // Remove the previously drawn directed image, if it exists
+            if (directedArrowItem != nullptr) {
+                scene()->removeItem(directedArrowItem);
+                delete directedArrowItem;
+                directedArrowItem = nullptr;
             }
 
-            // Draw the arrow pointing at the current node
+            // Draw the directed image pointing at the current node
             drawArrowToPoint(nodePos);
 
             // Increment index for the next node
             ++algosindex;
         } else {
             // Animation finished, stop the timer
-            if (arrowheadItem!= nullptr) {
-                scene()->removeItem(arrowheadItem);
-                delete arrowheadItem;
-                arrowheadItem = nullptr;
-            }
-            if (lineItem!= nullptr) {
-                scene()->removeItem(lineItem);
-                delete lineItem;
-                lineItem = nullptr;
-            }
             animationTimertwo.stop();
+
+            // Remove the directed image from the scene
+            if (directedArrowItem != nullptr) {
+                scene()->removeItem(directedArrowItem);
+                delete directedArrowItem;
+                directedArrowItem = nullptr;
+            }
         }
     } catch (const std::exception& e) {
-        qDebug() << "Exception caught in drawArrowToPoint: " << e.what();
+        qDebug() << "Exception caught in animateDFS: " << e.what();
     } catch (...) {
-        qDebug() << "Unknown exception caught in drawArrowToPoint";
+        qDebug() << "Unknown exception caught in animateDFS";
     }
 }
 void visualizeGraph::resizeEvent(QResizeEvent* event)
 {
      QGraphicsView::resizeEvent(event);
 
-    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map8");
+    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\space_back2");
 
     QGraphicsPixmapItem* backgroundItem = scene()->addPixmap(backgroundImage);
 
@@ -446,21 +425,6 @@ void visualizeGraph::resizeEvent(QResizeEvent* event)
 }
 void visualizeGraph::reDraw() {
     scene()->clear();
-    // Get all nodes from the graph
-    std::vector<Node> nodes = graph->getNodes();
-
-    // Iterate through each node
-    for (const auto& node : nodes)
-    {
-        drawNode(node);
-        drawEdge(node);
-    }
-    edgesDrawn.clear();
-    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map8"); // Adjust the path to your background image
-    // Scale the background image to fit the size of the widget
-
-
-    // Create a graphics item for the background
     QGraphicsPixmapItem* backgroundItem = scene()->addPixmap(backgroundImage);
 
     // Set the position of the background item to cover the whole scene
@@ -471,4 +435,15 @@ void visualizeGraph::reDraw() {
 
     // Optionally, set the aspect ratio mode to ensure the image is not distorted
     backgroundItem->setTransformationMode(Qt::SmoothTransformation);
+    // Get all nodes from the graph
+    std::vector<Node> nodes = graph->getNodes();
+
+    // Iterate through each node
+    for (const auto& node : nodes)
+    {
+        drawNode(node,1);
+        drawEdge(node);
+    }
+    edgesDrawn.clear();
+
 }

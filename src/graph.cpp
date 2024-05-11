@@ -87,7 +87,6 @@ bool Graph::isValidNode(const QString& nodeName) const {
 }
 
 bool Graph::isValidEdge(const QString& sourceNode, const QString& destinationNode, const QString& transportationName) const {
-    // Check if the source node exists in the adjacency list
     auto it = adjcencyList.find(sourceNode);
 
     // Iterate through the edges of the source node to find the destination node and transportation

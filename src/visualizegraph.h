@@ -31,11 +31,10 @@ public:
     static std::map<QString,QPointF>nodesPostitions;
     static std::unordered_set<std::tuple<QString, QString, QString>,TupleHash> edgesDrawn;
     explicit visualizeGraph(QWidget *parent = nullptr);
-    QGraphicsPolygonItem* arrowheadItem;
-    QGraphicsLineItem* lineItem;
+    QGraphicsPixmapItem* directedArrowItem;
     // Function to set the graph to be visualized
     void setGraph(Graph* graph);
-    void drawNode(const Node& node);
+    void drawNode(const Node& node,int choice);
     void drawEdge(const Node& node);
     void reDraw();
     void mousePressEvent(QMouseEvent *event) override;
@@ -46,7 +45,7 @@ public:
     void animateDFS();
     void animateBFS();
     void setBFSPath(const std::vector<Node>& path);
-
+    QPixmap nodeimg;
 
     // Index of the next node to draw
 signals:

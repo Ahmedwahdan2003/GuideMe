@@ -37,7 +37,7 @@ Home::Home(QWidget *parent) : QMainWindow(parent), ui(new Ui::Home), graph(new G
     graphWidget->setGraph(graph);
     ui->verticalLayout_2->addWidget(graphWidget);
 
-    QString imagePath = "C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map";
+    QString imagePath ="C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\space_back2";
         QPixmap backgroundImage(imagePath);
         if (!backgroundImage.isNull()) {
             QPalette palette;
