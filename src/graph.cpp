@@ -111,44 +111,7 @@ void Graph::addEdge(Node From,Node dest,Transportation opt){
     adjcencyList[dest].emplace_back(newEdge2);
 }
 
-bool Graph::readGraphFile(const QString& fileName)
-{
-    QFile file(fileName);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "Failed to open file: " << fileName.toStdString() << "\n";
-        return false;
-    }
 
-    QTextStream in(&file);
-    while (!in.atEnd()) {
-        QString line = in.readLine().trimmed();
-        QStringList parts = line.split(' ');
-
-        if (parts.size() < 3) {
-            qDebug() << "Invalid line: " << line.toStdString() << "\n";
-            continue;
-        }
-
-        QString source = parts[0];
-        QString destination = parts[1];
-        float x1 = parts[2].toFloat();
-        float y1 = parts[3].toFloat();
-        float x2 = parts[4].toFloat();
-        float y2 = parts[5].toFloat();
-        Node src(source,x1,y1);
-        Node dist(destination,x2,y2);
-
-        for(int i=6;i<parts.size()-1;i+=2){
-        QString transportationName = parts[i];
-        int transportationCost = parts[i+1].toInt();
-        Transportation transportation(transportationName, transportationCost);
-        addEdge(src, dist, transportation);
-        }
-    }
-
-    file.close();
-    return true;
-}
 
 
 
@@ -336,7 +299,44 @@ void Graph::deleteEdge(const Node& source, const Node& destination, const QStrin
 }
 
 
+bool Graph::readGraphFile(const QString& fileName)
+{
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Failed to open file: " << fileName.toStdString() << "\n";
+        return false;
+    }
 
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        QString line = in.readLine().trimmed();
+        QStringList parts = line.split(' ');
+
+        if (parts.size() < 3) {
+            qDebug() << "Invalid line: " << line.toStdString() << "\n";
+            continue;
+        }
+
+        QString source = parts[0];
+        QString destination = parts[1];
+        float x1 = parts[2].toFloat();
+        float y1 = parts[3].toFloat();
+        float x2 = parts[4].toFloat();
+        float y2 = parts[5].toFloat();
+        Node src(source,x1,y1);
+        Node dist(destination,x2,y2);
+
+        for(int i=6;i<parts.size()-1;i+=2){
+            QString transportationName = parts[i];
+            int transportationCost = parts[i+1].toInt();
+            Transportation transportation(transportationName, transportationCost);
+            addEdge(src, dist, transportation);
+        }
+    }
+
+    file.close();
+    return true;
+}
 void Graph::writeGraphToFile(const QString& fileName) {
     QFile file(fileName);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {

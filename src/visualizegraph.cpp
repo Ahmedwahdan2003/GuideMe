@@ -7,12 +7,12 @@
 #include<QScrollBar>
 #include<QRandomGenerator>
 QMap<QString, QString> visualizeGraph::nodeImagePaths = {
-    {"earth", "C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\earth2"},
-    {"mercury","C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\mercury.png"},
-    {"mars", "C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\mars"},
-    {"jubiter", "C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\jupiter.png"},
-    {"uranus", "C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\uranus.png"},
-    {"saturn", "C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\saturn"},
+    {"earth",  ":/resources/earth2"},
+    {"mercury",":/resources/mercury.png"},
+    {"mars",   ":/resources/mars"},
+    {"jubiter",":/resources/jupiter.png"},
+    {"uranus", ":/resources/uranus.png"},
+    {"saturn", ":/resources/saturn"},
     };
 unsigned int visualizeGraph::NodesLeft = 0; // Initialize static member
 unsigned int visualizeGraph::NodesDrawnidx = 0; // Initialize static member
@@ -33,7 +33,7 @@ visualizeGraph::visualizeGraph(QWidget *parent) : QGraphicsView(parent),animatio
     directedArrowItem=nullptr;
     isDragAllowed=false;
     //nodeimg = QPixmap("C:\\Users\\RAWAN\\Desktop\\GuideMe\\GuideMe\\src\\earth2").scaled(128,128, Qt::KeepAspectRatio);
-    backgroundImage = QPixmap("C:/Users/ahmed/Desktop/my projects/GuideMe/GuideMe/src/space_back2");
+    backgroundImage = QPixmap(":/resources/space_back2");
 }
 
 void visualizeGraph::setGraph(Graph* graph)   //{WAHDAN}==> Dependency injection
@@ -258,7 +258,7 @@ void visualizeGraph::drawArrowToPoint(const QPointF& targetPos)
 {
     try {
         // Load the image for the directed arrow
-        QPixmap directedArrowPixmap("C:/Users/ahmed/Desktop/my projects/GuideMe/GuideMe/src/space_ship2"); // Adjust the path to your directed arrow image
+        QPixmap directedArrowPixmap(":/resources/space_ship2"); // Adjust the path to your directed arrow image
         int pinSize = 80; // Adjust the size as needed
         QPixmap scaleddirectedArrowPixmap = directedArrowPixmap.scaled(pinSize, pinSize, Qt::KeepAspectRatio);
         // Create a QGraphicsPixmapItem for the directed arrow image
@@ -424,7 +424,7 @@ void visualizeGraph::resizeEvent(QResizeEvent* event)
 {
      QGraphicsView::resizeEvent(event);
 
-    QPixmap backgroundImage("C:/Users/ahmed/Desktop/my projects/GuideMe/GuideMe/src/space_back2");
+    QPixmap backgroundImage(":/resources/space_back2");
 
     QGraphicsPixmapItem* backgroundItem = scene()->addPixmap(backgroundImage);
 

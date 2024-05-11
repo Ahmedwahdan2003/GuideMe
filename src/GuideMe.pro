@@ -42,7 +42,7 @@ FORMS += \
 
 LIBS += -lopengl32
 
-
+RESOURCES += resources
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
