@@ -31,30 +31,23 @@ void visualizeGraph::setGraph(Graph* graph)   //{WAHDAN}==> Dependency injection
     this->graph = graph;
     if (!graph)
         return;
-    // dfspath = graph->DFS(graph->getNodes()[0]);
-    // bfspath = graph->BFS(graph->getNodes()[0]);
-    // Clear the scene
     scene()->clear();
     NodesLeft = graph->getNodes().size();
     NodesDrawnidx=0;
-    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map"); // Adjust the path to your background image
+    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map8");
 
-    // Scale the background image to fit the size of the widget
-    // QPixmap scaledBackgroundImage = backgroundImage.scaled(1100,1150, Qt::KeepAspectRatio);
-
-    // Create a graphics item for the background
     QGraphicsPixmapItem* backgroundItem = scene()->addPixmap(backgroundImage);
 
-    // Set the position of the background item to cover the whole scene
+
     backgroundItem->setPos(0, 0);
 
-    // Ensure the background image is behind all other items
-    backgroundItem->setZValue(-100); // Set a low Z-value
 
-    // Optionally, set the aspect ratio mode to ensure the image is not distorted
+    backgroundItem->setZValue(-100);
+
+
     backgroundItem->setTransformationMode(Qt::SmoothTransformation);
 
-    // Create a pixmap item and set the background image
+
 
 }
 void visualizeGraph::setBFSPath(const std::vector<Node>& path)
@@ -81,8 +74,8 @@ void visualizeGraph::drawNode(const Node& node)
 
     // Create a text item for displaying the node name
     QGraphicsTextItem* nodeNameItem = scene()->addText(node.nodeName);
-    nodeNameItem->setDefaultTextColor(Qt::black); // Adjust text color
-    nodeNameItem->setFont(QFont("Arial", 10)); // Adjust font properties
+    nodeNameItem->setDefaultTextColor(Qt::white); // Adjust text color
+    nodeNameItem->setFont(QFont("Arial", 11)); // Adjust font properties
     nodeNameItem->setPos(nodesPostitions[node.nodeName].x() - nodeNameItem->boundingRect().width() / 2,
                          nodesPostitions[node.nodeName].y() - scaledPinPixmap.height() - 20); // Adjust position
     nodeNameItem->setZValue(1); // Ensure text appears above the pin
@@ -141,7 +134,8 @@ void visualizeGraph::drawEdge(const Node& node)
                 QPen pen(colorMap[e.option.getName()]); // Set color based on transportation
                 pen.setWidth(4);
                 scene()->addLine(nodePos.x(), nodePos.y(), destPos.x(), destPos.y(), pen);
-                QGraphicsSimpleTextItem* textItem = scene()->addSimpleText(labelText);
+                QGraphicsTextItem* textItem = scene()->addText(labelText);
+                textItem->setDefaultTextColor(Qt::white);
                 textItem->setPos(midPoint);
                 QFont font = textItem->font();
                 font.setPointSize(11); // Set the desired font size
@@ -153,17 +147,6 @@ void visualizeGraph::drawEdge(const Node& node)
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
 void visualizeGraph::mousePressEvent(QMouseEvent *event)
 {
     QGraphicsView::mousePressEvent(event);
@@ -295,12 +278,12 @@ void visualizeGraph::drawArrowToPoint(const QPointF& targetPos)
 
             // Draw the arrowhead
             arrowheadItem = scene()->addPolygon(arrowhead);
-            arrowheadItem->setBrush(Qt::black);
+            arrowheadItem->setBrush(Qt::white);
             arrowheadItem->setPos(endX, endY);
 
             // Draw the line segment from the center to the arrowhead
             lineItem = scene()->addLine(centerPos.x(), centerPos.y(), endX, endY);
-            lineItem->setPen(QPen(Qt::black, 5, Qt::SolidLine, Qt::RoundCap));
+            lineItem->setPen(QPen(Qt::white, 5, Qt::SolidLine, Qt::RoundCap));
         } else {
             qDebug() << "Error: Vector length is zero in drawArrowToPoint";
         }
@@ -444,6 +427,23 @@ void visualizeGraph::animateBFS(){
         qDebug() << "Unknown exception caught in drawArrowToPoint";
     }
 }
+void visualizeGraph::resizeEvent(QResizeEvent* event)
+{
+     QGraphicsView::resizeEvent(event);
+
+    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map8");
+
+    QGraphicsPixmapItem* backgroundItem = scene()->addPixmap(backgroundImage);
+
+
+    backgroundItem->setPos(0, 0);
+
+
+    backgroundItem->setZValue(-100);
+
+
+    backgroundItem->setTransformationMode(Qt::SmoothTransformation);
+}
 void visualizeGraph::reDraw() {
     scene()->clear();
     // Get all nodes from the graph
@@ -456,9 +456,9 @@ void visualizeGraph::reDraw() {
         drawEdge(node);
     }
     edgesDrawn.clear();
-    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map"); // Adjust the path to your background image
+    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\map8"); // Adjust the path to your background image
     // Scale the background image to fit the size of the widget
-    //QPixmap scaledBackgroundImage = backgroundImage.scaled(viewport()->size(), Qt::KeepAspectRatio);
+
 
     // Create a graphics item for the background
     QGraphicsPixmapItem* backgroundItem = scene()->addPixmap(backgroundImage);

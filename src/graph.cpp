@@ -284,16 +284,14 @@ std::vector<Node> Graph::BFS(Node& StartNode)
     return true;
 }
 
-const std::unordered_set<QString> Graph::getConnectedNodes(const Node& node) const {
-        std::unordered_set<QString> connectedNodes;
-
-        // Get the connected nodes for the given source node
-        for (const auto& edge : adjcencyList.at(node)) {
-            connectedNodes.insert(edge.getDestination().getNodeName());
-        }
-
-        return connectedNodes;
-    }
+ const std::unordered_set<QString> Graph::getConnectedNodes(const Node& node) const {
+     const auto& edges = adjcencyList.at(node);
+     std::unordered_set<QString> connectedNodes;
+     for (const auto& edge : edges) {
+         connectedNodes.insert(edge.getDestination().getNodeName());
+     }
+     return connectedNodes;
+ }
 
 
 
