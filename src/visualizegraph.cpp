@@ -66,10 +66,14 @@ void visualizeGraph::setBFSPath(const std::vector<Node>& path)
 
 void visualizeGraph::drawNode(const Node& node, int choice)
 {
+    QPixmap nodePixmap;
     // Check if the node name exists in the nodeImagePaths mapping
     if (nodeImagePaths.contains(node.nodeName)) {
         // Load the image for the node using the specified image path
-        QPixmap nodePixmap(nodeImagePaths[node.nodeName]);
+         nodePixmap = QPixmap(nodeImagePaths[node.nodeName]);
+    }else{
+        nodePixmap = QPixmap(":/resources/earth2");
+    }
 
         // Scale the pixmap to the desired size
         QSize scaledSize(128, 128); // Adjust the size as needed
@@ -90,11 +94,6 @@ void visualizeGraph::drawNode(const Node& node, int choice)
         nodeNameItem->setPos(nodesPostitions[node.nodeName].x() - nodeNameItem->boundingRect().width() / 2,
                              nodesPostitions[node.nodeName].y() - scaledPixmap.height() - 20);
         nodeNameItem->setZValue(1);
-    } else {
-        // Handle the case when the node name is not found in the mapping
-        qDebug() << "Image path not found for node: " << node.nodeName;
-        // You can optionally use a default image or skip drawing the node
-    }
 }
 
 
