@@ -2,7 +2,7 @@ earth mercury 0 0 0 0 Bus 50 Metro 60 taxi 30
 earth mars 0 0 0 0 Bus 50 Metro 60 taxi 30 
 earth saturn 0 0 0 0 toktok 20 
 earth uranus 0 0 0 0 toktok 20 
-earth jubiter 0 0 0 0 toktok 30 
+earth jubiter 0 0 0 0 toktok 30 bus 55 
 jubiter mercury 0 0 0 0 Bus 50 Metro 60 taxi 30 toktok 10 
 jubiter mars 0 0 0 0 Bus 50 Metro 60 taxi 30 
 jubiter saturn 0 0 0 0 toktok 20 uber 20 

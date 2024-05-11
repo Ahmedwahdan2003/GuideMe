@@ -56,7 +56,8 @@ public slots:
     void startBFSAnimation();
     void updateNodeCounter();
 private:
-    Graph* graph; // Pointer to the graph object
+    Graph* graph;
+    static QMap<QString, QString> nodeImagePaths;// Pointer to the graph object
 };
 
 #endif // VISUALIZEGRAPH_H

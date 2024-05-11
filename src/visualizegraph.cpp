@@ -6,6 +6,14 @@
 #include<QApplication>
 #include<QScrollBar>
 #include<QRandomGenerator>
+QMap<QString, QString> visualizeGraph::nodeImagePaths = {
+    {"earth", "C:\\Users\\RAWAN\\Desktop\\GuideMe\\GuideMe\\src\\earth2"},
+    {"mercury","C:\\Users\\RAWAN\\Downloads\\mercury.png"},
+    {"mars", "C:\\Users\\RAWAN\\Downloads\\mars"},
+    {"jubiter", "C:\\Users\\RAWAN\\Downloads\\jupiter.png"},
+    {"uranus", "C:\\Users\\RAWAN\\Downloads\\uranus"},
+    {"saturn", "C:\\Users\\RAWAN\\Downloads\\saturn"},
+    };
 unsigned int visualizeGraph::NodesLeft = 0; // Initialize static member
 unsigned int visualizeGraph::NodesDrawnidx = 0; // Initialize static member
 bool visualizeGraph::flag = false;
@@ -24,8 +32,8 @@ visualizeGraph::visualizeGraph(QWidget *parent) : QGraphicsView(parent),animatio
     connect(&animationTimertwo, &QTimer::timeout, this, &visualizeGraph::animateBFS);
     directedArrowItem=nullptr;
     isDragAllowed=false;
-    nodeimg = QPixmap("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\earth2").scaled(128,128, Qt::KeepAspectRatio);
-    backgroundImage = QPixmap("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\space_back2");
+    //nodeimg = QPixmap("C:\\Users\\RAWAN\\Desktop\\GuideMe\\GuideMe\\src\\earth2").scaled(128,128, Qt::KeepAspectRatio);
+    backgroundImage = QPixmap("C:\\Users\\RAWAN\\Desktop\\GuideMe\\GuideMe\\src\\space_back2");
 }
 
 void visualizeGraph::setGraph(Graph* graph)   //{WAHDAN}==> Dependency injection
@@ -56,32 +64,38 @@ void visualizeGraph::setBFSPath(const std::vector<Node>& path)
     bfspath = path;
 }
 
-void visualizeGraph::drawNode(const Node& node,int choice)
+void visualizeGraph::drawNode(const Node& node, int choice)
 {
-    // Load a custom pin pixmap // Adjust the path to your pin image
+    // Check if the node name exists in the nodeImagePaths mapping
+    if (nodeImagePaths.contains(node.nodeName)) {
+        // Load the image for the node using the specified image path
+        QPixmap nodePixmap(nodeImagePaths[node.nodeName]);
 
-    // Scale the pin pixmap to desired size
+        // Scale the pixmap to the desired size
+        QSize scaledSize(128, 128); // Adjust the size as needed
+        QPixmap scaledPixmap = nodePixmap.scaled(scaledSize, Qt::KeepAspectRatio);
 
-    // Create a graphics item for the pin
-        QGraphicsPixmapItem* pinItem;
-        pinItem = scene()->addPixmap(nodeimg);
+        // Create a graphics item for the node
+        QGraphicsPixmapItem* nodeItem = scene()->addPixmap(scaledPixmap);
+        nodeItem->setOffset(-scaledPixmap.width() / 2, -scaledPixmap.height());
+        nodeItem->setPos(nodesPostitions[node.nodeName]);
 
+        // Set the node name as the tooltip
+        nodeItem->setToolTip(node.nodeName);
 
-    pinItem->setOffset(-nodeimg.width() / 2, -nodeimg.height()); // Adjust position to center the pin
-    pinItem->setPos(nodesPostitions[node.nodeName]);
-
-    // Set the node name as the tooltip
-    pinItem->setToolTip(node.nodeName);
-
-    // Create a text item for displaying the node name
-    QGraphicsTextItem* nodeNameItem = scene()->addText(node.nodeName);
-    nodeNameItem->setDefaultTextColor(Qt::white); // Adjust text color
-    nodeNameItem->setFont(QFont("Arial", 11)); // Adjust font properties
-    nodeNameItem->setPos(nodesPostitions[node.nodeName].x() - nodeNameItem->boundingRect().width() / 2,
-                         nodesPostitions[node.nodeName].y() - nodeimg.height() - 20); // Adjust position
-    nodeNameItem->setZValue(1); // Ensure text appears above the pin
+        // Create a text item for displaying the node name
+        QGraphicsTextItem* nodeNameItem = scene()->addText(node.nodeName);
+        nodeNameItem->setDefaultTextColor(Qt::white);
+        nodeNameItem->setFont(QFont("Arial", 11));
+        nodeNameItem->setPos(nodesPostitions[node.nodeName].x() - nodeNameItem->boundingRect().width() / 2,
+                             nodesPostitions[node.nodeName].y() - scaledPixmap.height() - 20);
+        nodeNameItem->setZValue(1);
+    } else {
+        // Handle the case when the node name is not found in the mapping
+        qDebug() << "Image path not found for node: " << node.nodeName;
+        // You can optionally use a default image or skip drawing the node
+    }
 }
-
 
 
 void visualizeGraph::drawEdge(const Node& node)
@@ -244,7 +258,7 @@ void visualizeGraph::drawArrowToPoint(const QPointF& targetPos)
 {
     try {
         // Load the image for the directed arrow
-        QPixmap directedArrowPixmap("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\space_ship2"); // Adjust the path to your directed arrow image
+        QPixmap directedArrowPixmap("C:\\Users\\RAWAN\\Desktop\\GuideMe\\GuideMe\\src\\space_ship2"); // Adjust the path to your directed arrow image
         int pinSize = 50; // Adjust the size as needed
         QPixmap scaleddirectedArrowPixmap = directedArrowPixmap.scaled(pinSize, pinSize, Qt::KeepAspectRatio);
         // Create a QGraphicsPixmapItem for the directed arrow image
@@ -410,7 +424,7 @@ void visualizeGraph::resizeEvent(QResizeEvent* event)
 {
      QGraphicsView::resizeEvent(event);
 
-    QPixmap backgroundImage("C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\space_back2");
+    QPixmap backgroundImage("C:\\Users\\RAWAN\\Desktop\\GuideMe\\GuideMe\\src\\space_back2");
 
     QGraphicsPixmapItem* backgroundItem = scene()->addPixmap(backgroundImage);
 
