@@ -7,12 +7,12 @@
 #include<QScrollBar>
 #include<QRandomGenerator>
 QMap<QString, QString> visualizeGraph::nodeImagePaths = {
-    {"earth", "C:\\Users\\RAWAN\\Desktop\\GuideMe\\GuideMe\\src\\earth2"},
-    {"mercury","C:\\Users\\RAWAN\\Downloads\\mercury.png"},
-    {"mars", "C:\\Users\\RAWAN\\Downloads\\mars"},
-    {"jubiter", "C:\\Users\\RAWAN\\Downloads\\jupiter.png"},
-    {"uranus", "C:\\Users\\RAWAN\\Downloads\\uranus"},
-    {"saturn", "C:\\Users\\RAWAN\\Downloads\\saturn"},
+    {"earth", "C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\earth2"},
+    {"mercury","C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\mercury.png"},
+    {"mars", "C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\mars"},
+    {"jubiter", "C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\jupiter.png"},
+    {"uranus", "C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\uranus.png"},
+    {"saturn", "C:\\Users\\ahmed\\Desktop\\my projects\\GuideMe\\GuideMe\\src\\saturn"},
     };
 unsigned int visualizeGraph::NodesLeft = 0; // Initialize static member
 unsigned int visualizeGraph::NodesDrawnidx = 0; // Initialize static member
@@ -33,7 +33,7 @@ visualizeGraph::visualizeGraph(QWidget *parent) : QGraphicsView(parent),animatio
     directedArrowItem=nullptr;
     isDragAllowed=false;
     //nodeimg = QPixmap("C:\\Users\\RAWAN\\Desktop\\GuideMe\\GuideMe\\src\\earth2").scaled(128,128, Qt::KeepAspectRatio);
-    backgroundImage = QPixmap("C:\\Users\\RAWAN\\Desktop\\GuideMe\\GuideMe\\src\\space_back2");
+    backgroundImage = QPixmap("C:/Users/ahmed/Desktop/my projects/GuideMe/GuideMe/src/space_back2");
 }
 
 void visualizeGraph::setGraph(Graph* graph)   //{WAHDAN}==> Dependency injection
@@ -146,7 +146,7 @@ void visualizeGraph::drawEdge(const Node& node)
         // Draw the edge and label with respective colors
         for (const Edge& e : edges) {
             if (e.parent == edge.parent && e.destination == edge.destination) {
-                QPen pen(colorMap[e.option.getName()]); // Set color based on transportation
+                QPen pen(Qt::white); // Set color based on transportation
                 pen.setWidth(4);
                 scene()->addLine(nodePos.x(), nodePos.y(), destPos.x(), destPos.y(), pen);
                 QGraphicsTextItem* textItem = scene()->addText(labelText);
@@ -258,14 +258,14 @@ void visualizeGraph::drawArrowToPoint(const QPointF& targetPos)
 {
     try {
         // Load the image for the directed arrow
-        QPixmap directedArrowPixmap("C:\\Users\\RAWAN\\Desktop\\GuideMe\\GuideMe\\src\\space_ship2"); // Adjust the path to your directed arrow image
-        int pinSize = 50; // Adjust the size as needed
+        QPixmap directedArrowPixmap("C:/Users/ahmed/Desktop/my projects/GuideMe/GuideMe/src/space_ship2"); // Adjust the path to your directed arrow image
+        int pinSize = 80; // Adjust the size as needed
         QPixmap scaleddirectedArrowPixmap = directedArrowPixmap.scaled(pinSize, pinSize, Qt::KeepAspectRatio);
         // Create a QGraphicsPixmapItem for the directed arrow image
         directedArrowItem = scene()->addPixmap(scaleddirectedArrowPixmap);
 
         // Set the position of the directed arrow item to the target position
-        directedArrowItem->setPos(targetPos+ QPointF(30, -80));
+        directedArrowItem->setPos(targetPos+ QPointF(80, -80));
 
         // Get the center position of the target node
         QPointF nodeCenterPos = targetPos;
@@ -424,7 +424,7 @@ void visualizeGraph::resizeEvent(QResizeEvent* event)
 {
      QGraphicsView::resizeEvent(event);
 
-    QPixmap backgroundImage("C:\\Users\\RAWAN\\Desktop\\GuideMe\\GuideMe\\src\\space_back2");
+    QPixmap backgroundImage("C:/Users/ahmed/Desktop/my projects/GuideMe/GuideMe/src/space_back2");
 
     QGraphicsPixmapItem* backgroundItem = scene()->addPixmap(backgroundImage);
 
