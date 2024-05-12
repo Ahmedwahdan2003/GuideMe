@@ -19,6 +19,33 @@ Node Graph::back(){
 bool Graph::empty(){
     return adjcencyList.empty();
 }
+Node Graph::front(){
+    if(adjcencyList.empty()){
+        return adjcencyList.begin()->first;
+    }
+    else
+        throw std::runtime_error("Graph is empty");
+}
+int Graph::size(){
+    if(!adjcencyList.empty())
+        return adjcencyList.size();
+    else
+        return 0;
+}
+int Graph::edgesLength(Node& node) {
+
+    auto it = adjcencyList.find(node);
+    if (it != adjcencyList.end()) {
+
+        return it->second.size();
+    }
+    else
+        return 0;
+}
+
+void Graph::clear(){
+    adjcencyList.clear();
+}
 
 void Graph::addNode(const Node& newNode) {
     // Check if the node already exists in the graph
