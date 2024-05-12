@@ -125,11 +125,19 @@ struct PairHash {
         return qHash(pair.first) ^ qHash(pair.second);
     }
 };
+struct NodeHash {
+    std::size_t operator()(const Node& node) const {
 
+        return std::hash<QString>{}(node.nodeName) ^
+               std::hash<float>{}(node.centerX) ^
+               std::hash<float>{}(node.centerY) ^
+               std::hash<int>{}(node.radius);
+    }
+};
 class Graph
 {
 
-private: std::map<Node,std::vector<Edge>>adjcencyList;
+private: std::unordered_map<Node, std::vector<Edge>, NodeHash> adjcencyList;
 
 public:
     Graph();

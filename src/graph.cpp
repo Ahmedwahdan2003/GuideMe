@@ -12,7 +12,7 @@ Graph::Graph(){
 
 }
 Node Graph::back(){
-    auto lastElement = adjcencyList.rbegin();
+    auto lastElement = adjcencyList.cbegin();
     Node lastNode = lastElement->first;
     return lastNode;
 }
