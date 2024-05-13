@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/txt">
-        <file>Graph.txt</file>
-    </qresource>
-</RCC>
