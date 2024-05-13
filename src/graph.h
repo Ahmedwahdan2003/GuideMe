@@ -41,6 +41,7 @@ struct Node {
     float centerX;
     float centerY;
     int radius;
+    Node() = default;
 
     Node(QString Name,float x,float y) : nodeName(std::move(Name)),centerX(x),centerY(y) {
         centerX=x;
@@ -80,6 +81,8 @@ struct Edge {
     float startY;
     float endX;
     float endY;
+    double getCost() const { return option.getCost(); } //ahmed sameh
+
     Edge(Node prnt, Node dest, Transportation opt)
         : parent(std::move(prnt)), destination(std::move(dest)), option(std::move(opt)) {
     startX=1;
@@ -150,15 +153,23 @@ public:
     void addNode( const Node& newNode);
     void updateEdge(const Node& source, const Node& destination, const QString& oldTransportation, const QString& newTransportation, int newCost) ;
     std::vector<Edge>getEdges(Node Source);
+
     std::vector<Node> getNodes() ;
     std::vector<Node>& getNodesRef() const;
     std::vector<Node> getNodes() const;
     const std::vector<Edge>& getEdgesRef() const;
     std::vector<Edge>getEdges();
+    std::vector<Edge> getEdges2(const QString& nodeName) const;
     const std::unordered_set<QString> getConnectedNodes(const Node& node) const;
     int size();
     int edgesLength(Node &node);
     void clear();
+
+    std::vector<std::vector<Node>> findAllPaths(const Node& startNode, const Node& endNode);               //ahmed sameh
+    Node getNodeByName(const QString& nodeName) const;                                                     //ahmed sameh
+    std::vector<std::vector<Node>> findUniquePaths(const Node& startNode, const Node& endNode) const;      //ahmed sameh
+    bool hasDuplicatePath(const std::vector<Node>& path) const;                                            //ahmed sameh
+
     bool empty();
     bool isValidNode(const QString& nodeName) const;
     bool isValidEdge(const QString& sourceNode, const QString& destinationNode, const QString& transportationName) const;

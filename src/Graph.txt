@@ -1,15 +1,15 @@
-jubiter earth 0 0 0 0 falcon9 50 
-jubiter mercury 0 0 0 0 Bus 50 Metro 60 taxi 30 toktok 10 
-jubiter mars 0 0 0 0 Bus 50 Metro 60 taxi 30 
-jubiter saturn 0 0 0 0 uber 20 
-jubiter uranus 0 0 0 0 toktok 23032 
+saturn jubiter 0 0 0 0 uber 20 
 saturn earth 0 0 0 0 toktok 20 
-saturn mars 0 0 0 0 toktko 30 
 saturn mercury 0 0 0 0 Bus 50 Metro 60 taxi 30 
 saturn uranus 0 0 0 0 toktok 231 
+saturn mars 0 0 0 0 toktko 30 
+mars jubiter 0 0 0 0 Bus 50 Metro 60 taxi 30 
 mars earth 0 0 0 0 Bus 50 Metro 60 taxi 30 
 mars mercury 0 0 0 0 Metro 60 taxi 30 toktok 50 
 mars uranus 0 0 0 0 toktok 29 toktok 40 
+uranus jubiter 0 0 0 0 toktok 23032 
 uranus earth 0 0 0 0 toktok 20 
 uranus mercury 0 0 0 0 toktok 50 
+mercury jubiter 0 0 0 0 Bus 50 Metro 60 taxi 30 toktok 10 
 mercury earth 0 0 0 0 Bus 50 Metro 60 taxi 30 
+earth jubiter 0 0 0 0 falcon9 50 

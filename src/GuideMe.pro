@@ -1,20 +1,17 @@
-QT       += core gui openglwidgets widgets
+QT += core gui openglwidgets widgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
 
-
-
-# You can make your code fail to compile if it uses deprecated APIs.
-# In order to do so, uncomment the following line.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+# Your other configurations
 
 SOURCES += \
     addt.cpp \
     bfswidget.cpp \
     deletet.cpp \
     dfswidget.cpp \
+    fdwidget.cpp \
     graph.cpp \
     home.cpp \
     main.cpp \
@@ -26,6 +23,7 @@ HEADERS += \
     bfswidget.h \
     deletet.h \
     dfswidget.h \
+    fdwidget.h \
     graph.h \
     home.h \
     updatet.h \
@@ -36,14 +34,10 @@ FORMS += \
     bfswidget.ui \
     deletet.ui \
     dfswidget.ui \
+    fdwidget.ui \
     home.ui \
     updatet.ui
-
 
 LIBS += -lopengl32
 
 RESOURCES += resources
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target

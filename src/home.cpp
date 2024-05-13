@@ -6,12 +6,13 @@
 #include"deletet.h"
 #include"bfswidget.h"
 #include"dfswidget.h"
+#include"fdwidget.h"
 #include <QMessageBox>
 #include<qfile.h>
 
 
 
-Home::Home(QWidget *parent) : QMainWindow(parent), ui(new Ui::Home), graph(new Graph())
+Home::Home(QWidget *parent) : QMainWindow(parent), graph(new Graph()), ui(new Ui::Home)
 {
     ui->setupUi(this);
 
@@ -37,7 +38,7 @@ Home::Home(QWidget *parent) : QMainWindow(parent), ui(new Ui::Home), graph(new G
     graphWidget->setGraph(graph);
     ui->verticalLayout_2->addWidget(graphWidget);
 
-    QString imagePath =":/resources/space_back2";
+    QString imagePath ="://resources/space_back2";
         QPixmap backgroundImage(imagePath);
         if (!backgroundImage.isNull()) {
             QPalette palette;
@@ -122,3 +123,12 @@ void Home::on_BFS_btn_clicked()
     // graphWidget->startBFSAnimation();
 }
 
+//ahmed sameh
+void Home::on_FD_btn_clicked()
+{
+
+    FDwidget *form = new FDwidget(graph);
+    form->setAttribute(Qt::WA_DeleteOnClose);
+    form->show();
+
+}

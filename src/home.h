@@ -33,5 +33,7 @@ private slots:
     void on_Del_btn_clicked();
     void on_pushButton_clicked();
     void on_BFS_btn_clicked();
+    void on_FD_btn_clicked();
+
 };
 #endif // HOME_H

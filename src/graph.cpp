@@ -3,10 +3,12 @@
 #include <QFile>
 #include <QTextStream>
 #include <QStringList>
+#include <set>
 #include<stack>
 #include<queue>
 #include <unordered_set>
 #include <algorithm>
+#include <functional>
 
 Graph::Graph(){
 
@@ -90,6 +92,18 @@ std::vector<Edge> Graph::getEdges(){
     }
 
     return allEdges;
+}
+
+std::vector<Edge> Graph::getEdges2(const QString& sourceNodeName) const
+{
+    auto it = adjcencyList.find(Node(sourceNodeName));
+
+    if (it != adjcencyList.end()) {
+        return it->second;
+    }
+    else {
+        return std::vector<Edge>();
+    }
 }
 
  std::vector<Node>& Graph::getNodesRef() const {
@@ -409,5 +423,62 @@ void Graph::writeGraphToFile(const QString& fileName) {
     }
     file.close();
 }
+
+//ahmed sameh
+
+std::vector<std::vector<Node>> Graph::findAllPaths(const Node& startNode, const Node& endNode)  {
+    std::vector<std::vector<Node>> allPaths;
+    std::vector<Node> currentPath;
+    std::unordered_set<QString> visited;
+
+    std::function<void(const Node&)> dfs = [&](const Node& node) {
+        visited.insert(node.getNodeName());
+        currentPath.push_back(node);
+
+        if (node == endNode) {
+            allPaths.push_back(currentPath);
+        } else {
+            for (const Edge& edge : adjcencyList.at(node)) {
+                if (visited.find(edge.getDestination().getNodeName()) == visited.end()) {
+                    dfs(edge.getDestination());
+                }
+            }
+        }
+
+        visited.erase(node.getNodeName());
+        currentPath.pop_back();
+    };
+
+    dfs(startNode);
+    return allPaths;
+}
+Node Graph::getNodeByName(const QString& nodeName) const {
+    for (const auto& pair : adjcencyList) {
+        if (pair.first.getNodeName() == nodeName) {
+            return pair.first;
+        }
+    }
+    return Node();
+}
+bool Graph::hasDuplicatePath(const std::vector<Node>& path) const {
+    std::set<std::pair<QString, QString>> edgePairs;
+
+    for (size_t i = 0; i < path.size() - 1; ++i) {
+        QString source = path[i].getNodeName();
+        QString dest = path[i + 1].getNodeName();
+
+        if (source > dest) {
+            std::swap(source, dest);
+        }
+
+        std::pair<QString, QString> edge(source, dest);
+        if (edgePairs.find(edge) != edgePairs.end()) {
+            return true;
+        }
+        edgePairs.insert(edge);
+    }
+    return false;
+}
+
 
 
